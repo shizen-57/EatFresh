@@ -1,19 +1,30 @@
 import React from "react";
-import styled from "styled-components/native"
-import { Text, StyleSheet } from "react-native";
+import styled from "styled-components/native";
 import { Card } from "react-native-paper";
+
+const ResturantCard = styled(Card)`
+  background-color: white; /* Correct CSS property name and syntax */
+  margin: 16px;
+  border-radius: 8px;
+`;
+
+const ResturantCardCover = styled(Card.Cover)`
+  padding: 15px;
+  background-color: white; /* Correct CSS property name and syntax */
+`;
 
 const Title = styled.Text`
   padding: 16px;
   font-size: 18px;
   font-weight: bold;
+  color: black; /* Optional: Added color for better styling */
 `;
 
 export const ResturantInfoCard = ({ resturant = {} }) => {
   const {
     name = "Some Restaurant",
     photos = [
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836"
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
     ],
     address = "Some random address",
     isOpenNow = true,
@@ -22,21 +33,9 @@ export const ResturantInfoCard = ({ resturant = {} }) => {
   } = resturant;
 
   return (
-    <Card elevation={5} style={styles.card}>
-      <Card.Cover style={styles.cover} source={{ uri: photos[0] }} />
+    <ResturantCard elevation={5}>
+      <ResturantCardCover source={{ uri: photos[0] }} />
       <Title>{name}</Title>
-    </Card>
+    </ResturantCard>
   );
 };
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: "white",
-    margin: 16,
-    borderRadius: 8,
-  },
-  cover: {
-    padding: 15,
-    backgroundColor: "white",
-  }
-});

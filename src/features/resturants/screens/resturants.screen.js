@@ -1,35 +1,47 @@
 import React from "react";
-import { SafeAreaView, StatusBar as RNStatusBar, StyleSheet, Text, View, Platform } from 'react-native';
-import { Searchbar } from 'react-native-paper';
-import { ResturantInfo, ResturantInfoCard } from "../components/resturant_info_card.component";
+import styled from "styled-components/native";
+import {
+  SafeAreaView,
+  StatusBar as RNStatusBar,
+  Platform,
+  StyleSheet,
+  View,
+} from "react-native";
+import { Searchbar } from "react-native-paper";
+import { ResturantInfoCard } from "../components/resturant_info_card.component";
+
+const SafeArea = styled(SafeAreaView)`
+  flex: 1;
+  margin-top: ${Platform.OS === "android" ? RNStatusBar.currentHeight + "px" : 0};
+`;
+
+const SearchContainer = styled(View)`
+  padding: 16px;
+  background-color: white;
+`;
+
+const ResturantListContainer = styled(View)`
+  flex: 1;
+  padding: 16px;
+  background-color: blue;
+`;
 
 export const ResturantsScreen = () => {
-    const [search, setSearch] = React.useState('');
+  const [search, setSearch] = React.useState("");
 
-    return (
-        <SafeAreaView style={{ flex: 1, marginTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 0 }}>
-            <View style={styles.search}>
-                <Searchbar
-                    placeholder='Search'
-                    value={search}
-                    onChangeText={text => setSearch(text)}  // Update state when text changes
-                />
-            </View>
+  return (
+    <SafeArea>
+      <SearchContainer>
+        <Searchbar
+          placeholder="Search"
+          value={search}
+          onChangeText={(text) => setSearch(text)} // Update state when text changes
+        />
+      </SearchContainer>
 
-            <View style={{
-                flex: 1,
-                padding: 16,
-                backgroundColor: 'blue',
-            }}>
-                <ResturantInfoCard/>
-            </View>
-        </SafeAreaView>
-    );
-}
-
-const styles = StyleSheet.create({
-    search: {
-        padding: 16,
-        backgroundColor: 'white'
-    }
-});
+      <ResturantListContainer>
+        <ResturantInfoCard />
+      </ResturantListContainer>
+    </SafeArea>
+  );
+};
