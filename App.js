@@ -14,10 +14,20 @@ import { useFonts as useLato, Lato_400Regular } from "@expo-google-fonts/lato";
 
 import { theme } from "./src/infrastructure/theme";
 import { RestaurantsScreen } from "./src/features/resturants/screens/restaurants.screen";
-
 import { SafeArea } from "./src/components/utility/safe_area.component";
 
+import { restaurantsRequest } from "./src/services/restaurants/restaurants.service"
+import { RestaurantsContextProvider } from "./src/services/restaurants/restaurants.context";
+import { LocationContextProvider } from "./src/services/location/location.context";
+
 const Tab = createBottomTabNavigator();
+
+const TAB_ICON = {
+  Restaurants: "restaurant",
+  Map: "map",
+  Settings: "settings",
+};
+
 
 const Settings = () => (
   <SafeArea>
@@ -29,6 +39,15 @@ const Map = () => (
     <Text>Map</Text>
   </SafeArea>
 );
+
+const createScreenOptions = ({ route }) => {
+  const iconName = TAB_ICON[route.name];
+  return {
+    tabBarIcon: ({ size, color }) => (
+      <Ionicons name={iconName} size={size} color={color} />
+    ),
+  };
+};
 
 export default function App() {
   const [oswaldLoaded] = useOswald({
@@ -46,35 +65,25 @@ export default function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-      <NavigationContainer>
-      <Tab.Navigator
-    screenOptions={({ route }) => ({
-      tabBarIcon: ({ color, size }) => {
-        let iconName;
-
-        if (route.name === "Restaurants") {
-          iconName = "restaurant"; // Fixed icon name
-        } else if (route.name === "Settings") {
-          iconName = "settings"; // Fixed icon name
-        } else if (route.name === "Map") {
-          iconName = "map"; // Fixed icon name
-        }
-
-        return <Ionicons name={iconName} size={size} color={color} />;
-      },
-      tabBarActiveTintColor: "tomato",
-      tabBarInactiveTintColor: "gray",
-      tabBarStyle: { backgroundColor: "white" },
-    })}
-  >
-            <Tab.Screen name="Restaurants" component={RestaurantsScreen} />
-            <Tab.Screen name="Map" component={Map} />
-            <Tab.Screen name="Settings" component={Settings} />
-          </Tab.Navigator>
-        </NavigationContainer>
+      <LocationContextProvider>
+          <RestaurantsContextProvider>
+            <NavigationContainer>
+              <Tab.Navigator
+                screenOptions={createScreenOptions}
+                tabBarOptions={{
+                  activeTintColor: "tomato",
+                  inactiveTintColor: "gray",
+                }}
+              >
+                <Tab.Screen name="Restaurants" component={RestaurantsScreen} />
+                <Tab.Screen name="Map" component={Map} />
+                <Tab.Screen name="Settings" component={Settings} />
+              </Tab.Navigator>
+            </NavigationContainer>
+          </RestaurantsContextProvider>
+        </LocationContextProvider>
       </ThemeProvider>
       <ExpoStatusBar style="auto" />
     </>
   );
 }
-
