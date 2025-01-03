@@ -19,7 +19,7 @@ import { SafeArea } from "./src/components/utility/safe_area.component";
 import { restaurantsRequest } from "./src/services/restaurants/restaurants.service"
 import { RestaurantsContextProvider } from "./src/services/restaurants/restaurants.context";
 import { LocationContextProvider } from "./src/services/location/location.context";
-
+import { RestaurantsNavigator } from "./src/infrastructure/navigation/restaurants.navigator";
 const Tab = createBottomTabNavigator();
 
 const TAB_ICON = {
@@ -75,7 +75,7 @@ export default function App() {
                   inactiveTintColor: "gray",
                 }}
               >
-                <Tab.Screen name="Restaurants" component={RestaurantsScreen} />
+                <Tab.Screen name="Restaurants" component={RestaurantsNavigator} />
                 <Tab.Screen name="Map" component={Map} />
                 <Tab.Screen name="Settings" component={Settings} />
               </Tab.Navigator>
