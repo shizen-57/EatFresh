@@ -5,15 +5,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { Text } from "react-native";
 
 
-import { SafeArea } from "../../components/utility/safe-area.component";
+import { SafeArea } from "../../components/utility/safe_area.component";
 import {RestaurantsNavigator} from "./restaurants.navigator";
 
 const Tab = createBottomTabNavigator();
 
 const TAB_ICON = {
-  Restaurants: "md-restaurant",
-  Map: "md-map",
-  Settings: "md-settings",
+  Restaurants: "restaurant",
+  Map: "map",
+  Settings: "settings",
 };
 
 
@@ -34,6 +34,7 @@ const Settings = () => (
       tabBarIcon: ({ size, color }) => (
         <Ionicons name={iconName} size={size} color={color} />
       ),
+      headerShown: false,
     };
   };
   
