@@ -20,6 +20,7 @@ import { restaurantsRequest } from "./src/services/restaurants/restaurants.servi
 import { RestaurantsContextProvider } from "./src/services/restaurants/restaurants.context";
 import { LocationContextProvider } from "./src/services/location/location.context";
 import { RestaurantsNavigator } from "./src/infrastructure/navigation/restaurants.navigator";
+import { MapScreen } from "./src/features/resturants/map/screens/map.screen";
 const Tab = createBottomTabNavigator();
 
 const TAB_ICON = {
@@ -75,8 +76,8 @@ export default function App() {
                   inactiveTintColor: "gray",
                 }}
               >
-                <Tab.Screen name="Restaurants" component={RestaurantsNavigator} />
-                <Tab.Screen name="Map" component={Map} />
+                <Tab.Screen name="Restaurant" component={RestaurantsNavigator} />
+                <Tab.Screen name="Map" component={MapScreen} />
                 <Tab.Screen name="Settings" component={Settings} />
               </Tab.Navigator>
             </NavigationContainer>
