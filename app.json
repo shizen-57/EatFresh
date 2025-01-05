@@ -1,7 +1,12 @@
 {
   "expo": {
+<<<<<<< HEAD
     "name": "EatFresh_V2",
     "slug": "EatFresh_V2",
+=======
+    "name": "EatFresh",
+    "slug": "EatFresh",
+>>>>>>> 8636adafcb353ee986a6dc2057c6553a129d0b4c
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

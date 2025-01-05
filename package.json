@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "eatfresh_v2",
+=======
+  "name": "eatfresh",
+>>>>>>> 8636adafcb353ee986a6dc2057c6553a129d0b4c
   "license": "0BSD",
   "version": "1.0.0",
   "main": "index.js",
