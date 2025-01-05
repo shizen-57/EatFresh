@@ -1,27 +1,55 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import HeaderBar from '../Components/HeaderBar'; // Adjust the path as necessary
+import { View, StyleSheet } from 'react-native';
+import HeaderBar from '../Components/HeaderBar';
+import { Search } from '../Components/search.component';
+import { SafeArea } from '../Components/safe_area.component';
+import Catagories from '../Components/Catagories';
+import OfferSliders from '../Components/OfferSliders';
 
 const HomeScreen = () => {
     return (
-        <>  
-        <HeaderBar />
-        <View style={styles.container}>
-            <Text style={styles.text}>Welcome to the Home Screen!</Text>
-        </View>
-        </>
-        
+        <SafeArea>
+            <View style={styles.container}>
+                <View style={styles.headerWrapper}>
+                    <HeaderBar />
+                </View>
+                <View style={styles.searchWrapper}>
+                    <Search />
+                </View>
+                <View>
+                    <Catagories style={styles.categoriesWrapper}/>
+                </View>
+                <View style={styles.offerSlidersWrapper}>
+                    <OfferSliders />
+                </View>
+            </View>
+        </SafeArea>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: '#fff',
+        flexDirection: 'column',
     },
-    text: {
-        fontSize: 20,
+    headerWrapper: {
+        height: 90,
+        backgroundColor: '#f8f8f8',
+    },
+    searchWrapper: {
+        paddingHorizontal: 10,
+        backgroundColor: '#ffebcd',
+        paddingTop: 10,
+        mariginTop: 10,
+    },
+    categoriesWrapper: {
+        paddingHorizontal: 10,
+        paddingTop: 10,
+    },
+    offerSlidersWrapper: {
+        paddingHorizontal: 10,
+        paddingTop: 100,
     },
 });
 

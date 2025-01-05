@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, ButtonText, Container, Input, Logo, SignupLink, SignupText, Title } from '../Components/LoginSignupScreen.styled';
+import { Container, Logo, Title, Input, Button, ButtonText, SignupText, SignupLink } from './LoginSignupScreen.styled';
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
