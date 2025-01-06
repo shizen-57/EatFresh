@@ -1,44 +1,61 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import MapView, { Marker, UrlTile } from "react-native-maps";
-import { SafeArea } from "../../../../components/utility/safe_area.component";
+import React, { useContext, useState, useEffect } from "react";
+import MapView, { Marker, Callout } from "react-native-maps";  // Import Marker and Callout here
+import styled from "styled-components/native";
+
+import { LocationContext } from "../../../../services/location/location.context";
+import { RestaurantsContext } from "../../../../services/restaurants/restaurants.context";
+import { Search } from "../../components/search.component";
+import { MapCallout } from "./components/map-callout.component";
+
+const Map = styled(MapView)`
+  height: 100%;
+  width: 100%;
+`;
 
 export const MapScreen = () => {
-  return (
-    <SafeArea>
-      <View style={styles.container}>
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: 23.8103, // Dhaka Latitude
-            longitude: 90.4125, // Dhaka Longitude
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        >
-          {/* OpenStreetMap Tile Layer */}
-          <UrlTile
-            urlTemplate="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            maximumZ={19} // Max zoom level for tiles
-          />
+  const { location } = useContext(LocationContext);
+  const { restaurants = [] } = useContext(RestaurantsContext);
+  const [latDelta, setLatDelta] = useState(0);
 
-          {/* Marker for Dhaka */}
+  // Check if location or viewport is missing
+  if (!location || !location.viewport) {
+    return null; // Prevent rendering if location data is missing
+  }
+
+  const { lat, lng, viewport } = location;
+
+  useEffect(() => {
+    const northeastLat = viewport.northeast.lat;
+    const southwestLat = viewport.southwest.lat;
+    setLatDelta(northeastLat - southwestLat);
+  }, [viewport]);
+
+  return (
+    <>
+      <Search />
+      <Map
+        region={{
+          latitude: lat,
+          longitude: lng,
+          latitudeDelta: latDelta,
+          longitudeDelta: 0.02,
+        }}
+      >
+        {restaurants.map((restaurant) => (
           <Marker
-            coordinate={{ latitude: 23.8103, longitude: 90.4125 }}
-            title="Dhaka"
-            description="Capital of Bangladesh"
-          />
-        </MapView>
-      </View>
-    </SafeArea>
+            key={restaurant.name}
+            title={restaurant.name}
+            coordinate={{
+              latitude: restaurant.geometry.location.lat,
+              longitude: restaurant.geometry.location.lng,
+            }}
+          >
+            <Callout>
+              <MapCallout restaurant={restaurant} />
+            </Callout>
+          </Marker>
+        ))}
+      </Map>
+    </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    flex: 1,
-  },
-});
