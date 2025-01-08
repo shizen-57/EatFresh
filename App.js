@@ -1,10 +1,10 @@
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
-import React from "react";
-import { Text } from "react-native";
+import React, { useState, useEffect } from "react";
 import { ThemeProvider } from "styled-components/native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
+import { initializeApp, getApps } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 import {
   useFonts as useOswald,
@@ -13,42 +13,27 @@ import {
 import { useFonts as useLato, Lato_400Regular } from "@expo-google-fonts/lato";
 
 import { theme } from "./src/infrastructure/theme";
-import { RestaurantsScreen } from "./src/features/resturants/screens/restaurants.screen";
-import { SafeArea } from "./src/components/utility/safe_area.component";
+import { Navigation } from "./src/infrastructure/navigation";
 
-import { restaurantsRequest } from "./src/services/restaurants/restaurants.service"
 import { RestaurantsContextProvider } from "./src/services/restaurants/restaurants.context";
 import { LocationContextProvider } from "./src/services/location/location.context";
-import { RestaurantsNavigator } from "./src/infrastructure/navigation/restaurants.navigator";
-import { MapScreen } from "./src/features/resturants/map/screens/map.screen";
-const Tab = createBottomTabNavigator();
-
-const TAB_ICON = {
-  Restaurants: "restaurant",
-  Map: "map",
-  Settings: "settings",
+import { FavouritesContextProvider } from "./src/services/favourites/favourites.context";
+import { AuthenticationContextProvider } from "./src/services/authentication/authentication.context";
+const firebaseConfig = {
+  apiKey: "AIzaSyD3gpahyEZlvGucTtle63AC_rsHb4XTxl8",
+  authDomain: "eatfresh-95c4e.firebaseapp.com",
+  projectId: "eatfresh-95c4e",
+  storageBucket: "eatfresh-95c4e.firebasestorage.app",
+  messagingSenderId: "958819136051",
+  appId: "1:958819136051:web:b810d4f3d85d205df62946",
+  measurementId: "G-379PZD2H58"
 };
 
+const firebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+const storage = getStorage(firebaseApp);
 
-const Settings = () => (
-  <SafeArea>
-    <Text>Settings</Text>
-  </SafeArea>
-);
-const Map = () => (
-  <SafeArea>
-    <Text>Map</Text>
-  </SafeArea>
-);
-
-const createScreenOptions = ({ route }) => {
-  const iconName = TAB_ICON[route.name];
-  return {
-    tabBarIcon: ({ size, color }) => (
-      <Ionicons name={iconName} size={size} color={color} />
-    ),
-  };
-};
 
 export default function App() {
   const [oswaldLoaded] = useOswald({
@@ -60,29 +45,21 @@ export default function App() {
   });
 
   if (!oswaldLoaded || !latoLoaded) {
-    return null;
+    return <></>;
   }
 
   return (
     <>
       <ThemeProvider theme={theme}>
-      <LocationContextProvider>
-          <RestaurantsContextProvider>
-            <NavigationContainer>
-              <Tab.Navigator
-                screenOptions={createScreenOptions}
-                tabBarOptions={{
-                  activeTintColor: "tomato",
-                  inactiveTintColor: "gray",
-                }}
-              >
-                <Tab.Screen name="Restaurant" component={RestaurantsNavigator} />
-                <Tab.Screen name="Map" component={MapScreen} />
-                <Tab.Screen name="Settings" component={Settings} />
-              </Tab.Navigator>
-            </NavigationContainer>
-          </RestaurantsContextProvider>
-        </LocationContextProvider>
+        <AuthenticationContextProvider>
+          <FavouritesContextProvider>
+            <LocationContextProvider>
+              <RestaurantsContextProvider>
+                <Navigation />
+              </RestaurantsContextProvider>
+            </LocationContextProvider>
+          </FavouritesContextProvider>
+        </AuthenticationContextProvider>
       </ThemeProvider>
       <ExpoStatusBar style="auto" />
     </>
