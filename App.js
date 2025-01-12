@@ -21,6 +21,8 @@ import { RestaurantsContextProvider } from "./src/services/restaurants/restauran
 import { LocationContextProvider } from "./src/services/location/location.context";
 import { RestaurantsNavigator } from "./src/infrastructure/navigation/restaurants.navigator";
 import { MapScreen } from "./src/features/resturants/map/screens/map.screen";
+import { FavouritesContextProvider } from "./src/services/favourites/favourites.context";
+
 const Tab = createBottomTabNavigator();
 
 const TAB_ICON = {
@@ -66,6 +68,7 @@ export default function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
+        <FavouritesContextProvider>
       <LocationContextProvider>
           <RestaurantsContextProvider>
             <NavigationContainer>
@@ -83,6 +86,7 @@ export default function App() {
             </NavigationContainer>
           </RestaurantsContextProvider>
         </LocationContextProvider>
+        </FavouritesContextProvider>
       </ThemeProvider>
       <ExpoStatusBar style="auto" />
     </>
