@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, ButtonText, Container, Input, Logo, Title } from './LoginSignupScreen.styled';
+import { Container, Input, Button, ButtonText } from './LoginSignupScreen.styled';
 
 const SignupNextScreen = ({ navigation }) => {
     const [name, setName] = useState('');
@@ -7,22 +7,11 @@ const SignupNextScreen = ({ navigation }) => {
     const [location, setLocation] = useState('');
 
     const handleNext = () => {
-        // if (!name || !phone || !location) {
-        //     Alert.alert('Error', 'Please fill all fields');
-        //     return;
-        // }
-
-        navigation.navigate('Signup', {
-            name,
-            phone,
-            location
-        });
+        navigation.navigate('Signup', { name, phone, location });
     };
 
     return (
         <Container>
-            <Logo source={require('../../assets/SignUp.png')} />
-            <Title>Complete Your Profile</Title>
             <Input
                 placeholder="Name"
                 value={name}

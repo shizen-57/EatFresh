@@ -1,36 +1,38 @@
 import React, { useState } from 'react';
-import {
-    Button,
-    ButtonText,
-    Container,
-    Input,
-    Logo,
-    SignupLink,
-    SignupText,
-    Title
-} from './LoginSignupScreen.styled';
+import { Container, Input, Button, ButtonText } from './LoginSignupScreen.styled';
+import { auth, db } from '../../firebase'; // Import Firebase auth and Firestore
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { collection, addDoc } from 'firebase/firestore';
 
-const SignupScreen = ({ navigation }) => {
-    const [username, setUsername] = useState('');
+const SignupScreen = ({ navigation, route }) => {
+    const { name, phone, location } = route.params;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSignup = () => {
-        console.log('Username:', username);
-        console.log('Email:', email);
-        console.log('Password:', password);
+        createUserWithEmailAndPassword(auth, email, password)
+            .then(async (userCredential) => {
+                const user = userCredential.user;
+                console.log('Signup successful:', user);
+
+                // Store user info in Firestore
+                await addDoc(collection(db, 'users'), {
+                    uid: user.uid,
+                    name,
+                    phone,
+                    location,
+                    email,
+                });
+
+                navigation.navigate('Home');
+            })
+            .catch((error) => {
+                console.error('Signup error:', error);
+            });
     };
 
     return (
         <Container>
-            <Logo source={require('../../assets/SignUp.png')} />
-            <Title>Create Account</Title>
-            <Input
-                placeholder="Username"
-                value={username}
-                onChangeText={setUsername}
-                autoCapitalize="none"
-            />
             <Input
                 placeholder="Email"
                 value={email}
@@ -47,12 +49,6 @@ const SignupScreen = ({ navigation }) => {
             <Button onPress={handleSignup}>
                 <ButtonText>Sign Up</ButtonText>
             </Button>
-            <SignupText>
-                Already have an account?{' '}
-                <SignupLink onPress={() => navigation.navigate('Login')}>
-                    Login
-                </SignupLink>
-            </SignupText>
         </Container>
     );
 };

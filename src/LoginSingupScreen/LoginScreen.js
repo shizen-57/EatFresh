@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 import { Container, Logo, Title, Input, Button, ButtonText, SignupText, SignupLink } from './LoginSignupScreen.styled';
+import { auth } from '../../firebase'; // Import Firebase auth
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
-        // Handle login logic here
-        console.log('Login with:', email, password);
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                console.log('Login successful:', userCredential.user);
+                navigation.navigate('Home');
+            })
+            .catch((error) => {
+                console.error('Login error:', error);
+            });
     };
 
     const handleSignup = () => {
@@ -35,10 +43,7 @@ const LoginScreen = ({ navigation }) => {
                 <ButtonText>Login</ButtonText>
             </Button>
             <SignupText>
-                Don't have an account?{' '}
-                <SignupLink onPress={handleSignup}>
-                    Sign up
-                </SignupLink>
+                Don't have an account? <SignupLink onPress={handleSignup}>Sign Up</SignupLink>
             </SignupText>
         </Container>
     );
