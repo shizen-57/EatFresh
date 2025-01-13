@@ -1,8 +1,11 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import { useNavigation } from "@react-navigation/native";
 
 export default function BottomTabs() {
+  const navigation = useNavigation();
+
   return (
     <View
       style={{
@@ -12,17 +15,15 @@ export default function BottomTabs() {
         justifyContent: "space-between",
       }}
     >
-      <Icon icon="home" text="Home" />
-      <Icon icon="search" text="Browse" />
-      <Icon icon="Heart" text="Favourite" />
-      <Icon icon="map" text="Map" />
-      <Icon icon="user" text="Account" />
+      <Icon icon="home" text="Home" onPress={() => navigation.navigate("HomeScreen")} />
+      <Icon icon="map" text="Map" onPress={() => navigation.navigate("MapScreen")} />
+      <Icon icon="user" text="Account" onPress={() => navigation.navigate("AccountScreen")} />
     </View>
   );
 }
 
 const Icon = (props) => (
-  <TouchableOpacity>
+  <TouchableOpacity onPress={props.onPress}>
     <View>
       <FontAwesome5
         name={props.icon}

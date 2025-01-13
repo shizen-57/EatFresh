@@ -1,19 +1,21 @@
-import { db } from "../../../../firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { realtimeDb, ref, onValue } from "../../../../firebase";
 
-export const getRestaurants = async () => {
-  const querySnapshot = await getDocs(collection(db, "restaurants"));
-  const restaurants = [];
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    restaurants.push({
-      id: doc.id,
-      name: data.name,
-      address: data.location.address,
-      latitude: data.location.latitude,
-      longitude: data.location.longitude,
-      rating: data.rating,
+export const getRestaurants = () => {
+  return new Promise((resolve, reject) => {
+    const restaurantsRef = ref(realtimeDb, 'restaurants');
+    onValue(restaurantsRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const restaurants = Object.keys(data).map(key => ({
+          id: key,
+          ...data[key]
+        }));
+        resolve(restaurants);
+      } else {
+        reject("No data available");
+      }
+    }, (error) => {
+      reject(error);
     });
   });
-  return restaurants;
 };

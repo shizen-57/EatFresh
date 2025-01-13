@@ -8,7 +8,7 @@ import RestaurantItems from "../Components/home/RestaurantItems";
 import SearchBar from "../Components/home/SearchBar";
 import { realtimeDb, ref, onValue } from "../../firebase";
 
-export default function Home({ navigation }) {
+export default function HomeScreen({ navigation }) {
   const [restaurantData, setRestaurantData] = useState([]);
   const [city, setCity] = useState("Dhaka");
   const [activeTab, setActiveTab] = useState("Delivery");

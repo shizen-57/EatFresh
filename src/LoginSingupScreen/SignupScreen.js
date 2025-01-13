@@ -24,7 +24,7 @@ const SignupScreen = ({ navigation, route }) => {
                     email,
                 });
 
-                navigation.navigate('Home');
+                navigation.navigate('HomeScreen');
             })
             .catch((error) => {
                 console.error('Signup error:', error);
