@@ -15,6 +15,7 @@
     "@firebase/app": "^0.10.17",
     "@firebase/firestore": "^4.7.5",
     "@mapbox/polyline": "^1.2.1",
+    "@react-native-async-storage/async-storage": "^2.1.0",
     "@react-native-firebase/app": "^21.6.2",
     "@react-native-firebase/database": "^21.6.2",
     "@react-navigation/bottom-tabs": "^7.2.0",

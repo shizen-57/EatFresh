@@ -16,6 +16,7 @@ import AccountScreen from "../../features/account/AccountScreen";
 // import BrowseScreen from "../../Screens/BrowseScreen";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import BottomTabs from "../../Components/home/BottomTab";
+import FavouriteScreen from "../../features/favourites/screens/favouriteScreen";
 
 const store = configureStore();
 
@@ -30,13 +31,14 @@ export default function RootNavigation() {
   return (
     <ReduxProvider store={store}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="HomeScreen" screenOptions={screenOptions}>
+        <Stack.Navigator initialRouteName="Login" screenOptions={screenOptions}>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="SignupNext" component={SignupNextScreen} />
           <Stack.Screen name="Signup" component={SignupScreen} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="MapScreen" component={MapScreen} />
           <Stack.Screen name="AccountScreen" component={AccountScreen} />
+          <Stack.Screen name="FavouriteScreen" component={FavouriteScreen} />
           <Stack.Screen name="RestaurantDetail" component={RestaurantDetail} />
           <Stack.Screen name="OrderCompleted" component={OrderCompleted} />
         </Stack.Navigator>
