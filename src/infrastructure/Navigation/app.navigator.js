@@ -36,6 +36,7 @@ export default function RootNavigation() {
           <Stack.Screen name="Signup" component={SignupScreen} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="MapScreen" component={MapScreen} />
+          <Stack.Screen name="AccountScreen" component={AccountScreen} />
           <Stack.Screen name="RestaurantDetail" component={RestaurantDetail} />
           <Stack.Screen name="OrderCompleted" component={OrderCompleted} />
         </Stack.Navigator>
