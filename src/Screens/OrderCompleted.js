@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, SafeAreaView, ScrollView } from "react-native";
-import { useSelector } from "react-redux";
+import { useCart } from "../context/CartContext";
 import LottieView from "lottie-react-native";
 import { db, collection, getDocs } from "../../firebase";
 import MenuItems from "../Components/RestaurantDetail/MenuItems";
@@ -10,9 +10,8 @@ export default function OrderCompleted() {
     items: [],
   });
 
-  const { items, restaurantName } = useSelector(
-    (state) => state.cartReducer.selectedItems
-  );
+  const { selectedItems } = useCart();
+  const { items, restaurantName } = selectedItems;
 
   useEffect(() => {
     const fetchLastOrder = async () => {

@@ -1,62 +1,59 @@
-import React from "react";
-import { View, Text, Image, ScrollView } from "react-native";
+import React from 'react';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const items = [
-  {
-    image: require("../../../assets/images/shopping-bag.png"),
-    text: "Pick-up",
-  },
-  {
-    image: require("../../../assets/images/soft-drink.png"),
-    text: "Soft Drinks",
-  },
-  {
-    image: require("../../../assets/images/bread.png"),
-    text: "Bakery Items",
-  },
-  {
-    image: require("../../../assets/images/fast-food.png"),
-    text: "Fast Foods",
-  },
-  {
-    image: require("../../../assets/images/deals.png"),
-    text: "Deals",
-  },
-  {
-    image: require("../../../assets/images/coffee.png"),
-    text: "Coffee & Tea",
-  },
-  {
-    image: require("../../../assets/images/desserts.png"),
-    text: "Desserts",
-  },
+const categories = [
+  "Bengali",
+  "Seafood",
+  "Biryani",
+  "Curry",
+  "Vegetarian",
+  "Indian",
+  "Bread",
+  "Rice",
+  "Tandoori",
+  "Street Food",
+  "Grill",
+  "International",
+  "Kebab"
 ];
 
 export default function Categories() {
+  const navigation = useNavigation();
+
   return (
-    <View
-      style={{
-        marginTop: 2,
-        backgroundColor: "#fff",
-        paddingVertical: 10,
-        paddingLeft: 20,
-      }}
-    >
+    <View style={styles.container}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {items.map((item, index) => (
-          <View key={index} style={{ alignItems: "center", marginRight: 30 }}>
-            <Image
-              source={item.image}
-              style={{
-                width: 50,
-                height: 40,
-                resizeMode: "contain",
-              }}
-            />
-            <Text style={{ fontSize: 13, fontWeight: "900" }}>{item.text}</Text>
-          </View>
+        {categories.map((category, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.categoryButton}
+            onPress={() => navigation.navigate("CategoryScreen", { category })}
+          >
+            <Text style={styles.categoryText}>{category}</Text>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 5,
+    backgroundColor: "#fff",
+    paddingVertical: 10,
+  },
+  categoryButton: {
+    backgroundColor: "#eee",
+    padding: 10,
+    marginHorizontal: 5,
+    borderRadius: 20,
+    minWidth: 90,
+    alignItems: 'center',
+  },
+  categoryText: {
+    fontWeight: "600",
+    fontSize: 13,
+  }
+});

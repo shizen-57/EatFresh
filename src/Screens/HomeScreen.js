@@ -10,24 +10,38 @@ import { realtimeDb, ref, onValue } from "../../firebase";
 
 export default function HomeScreen({ navigation }) {
   const [restaurantData, setRestaurantData] = useState([]);
-  const [city, setCity] = useState("Dhaka");
+  const [menuItems, setMenuItems] = useState({});
   const [activeTab, setActiveTab] = useState("Delivery");
 
   useEffect(() => {
-    const fetchRestaurants = () => {
+    const fetchData = () => {
       const restaurantsRef = ref(realtimeDb, 'restaurants');
+      const menuItemsRef = ref(realtimeDb, 'menuItems');
+
+      // Fetch restaurants
       onValue(restaurantsRef, (snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.val();
-          const restaurants = Object.values(data).filter(restaurant => 
+          const restaurants = Object.entries(data).map(([id, restaurant]) => ({
+            id,
+            ...restaurant,
+            menu: restaurant.menu.map(menuId => menuItems[menuId] || {})
+          })).filter(restaurant => 
             restaurant.transactions?.includes(activeTab.toLowerCase())
           );
           setRestaurantData(restaurants);
         }
       });
+
+      // Fetch menu items
+      onValue(menuItemsRef, (snapshot) => {
+        if (snapshot.exists()) {
+          setMenuItems(snapshot.val());
+        }
+      });
     };
 
-    fetchRestaurants();
+    fetchData();
   }, [activeTab]);
 
   const handleCityChange = (filteredRestaurants) => {

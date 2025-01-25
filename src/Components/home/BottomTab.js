@@ -16,7 +16,7 @@ export default function BottomTabs() {
       }}
     >
       <Icon icon="home" text="Home" onPress={() => navigation.navigate("HomeScreen")} />
-      <Icon icon="heart" text="Favourites" onPress={() => navigation.navigate("FavouriteScreen")} />
+      {/* <Icon icon="heart" text="Favourites" onPress={() => navigation.navigate("FavouriteScreen")} /> */}
       <Icon icon="map" text="Map" onPress={() => navigation.navigate("MapScreen")} />
       <Icon icon="user" text="Account" onPress={() => navigation.navigate("AccountScreen")} />
     </View>

@@ -1,59 +1,43 @@
-import { MaterialIcons } from '@expo/vector-icons';
 import React from "react";
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Divider } from "react-native-elements";
-import { useDispatch, useSelector } from "react-redux";
+import { useCart } from "../../context/CartContext";
 
-export default function MenuItems({ restaurantName, foods, marginLeft }) {
-  const dispatch = useDispatch();
-  const cartItems = useSelector((state) => state.cartReducer.selectedItems.items);
-  const favouriteItems = useSelector((state) => state.favouriteReducer.favouriteItems);
+export default function MenuItems({ restaurantName, restaurantId, foods }) {
+  const { selectedItems, addToCart } = useCart();
 
   const selectItem = (item, checkboxValue) => {
-    dispatch({
-      type: "ADD_TO_CART",
-      payload: {
-        ...item,
-        restaurantName: restaurantName,
-        checkboxValue: checkboxValue,
-      },
-    });
-  };
-
-  const toggleFavourite = (food) => {
-    const isFavourite = favouriteItems.find((item) => item.id === food.id);
-    dispatch({
-      type: isFavourite ? "REMOVE_FROM_FAVOURITES" : "ADD_TO_FAVOURITES",
-      payload: {
-        ...food,
-        restaurantName: restaurantName,
-        id: food.id || Math.random().toString(),
-      },
-    });
+    addToCart(item, restaurantName, restaurantId, checkboxValue);
   };
 
   const isFoodInCart = (food) => 
-    cartItems.find((item) => item.title === food.title);
+    selectedItems.items.find(
+      (item) => 
+        item.name === food.name && 
+        item.restaurantId === restaurantId
+    );
 
   const FoodInfo = (props) => (
-    <View style={{ width: 240, justifyContent: "space-evenly" }}>
-      <Text style={styles.titleStyle}>{props.food.title}</Text>
-      <Text>{props.food.description}</Text>
-      <Text>{props.food.price}</Text>
+    <View style={styles.foodInfo}>
+      <Text style={styles.titleStyle}>{props.food.name}</Text>
+      <Text style={styles.description}>{props.food.description}</Text>
+      <Text style={styles.price}>৳{props.food.price}</Text>
+      <View style={styles.dishTypes}>
+        {props.food.dish_type && props.food.dish_type.map((type, index) => (
+          <Text key={index} style={styles.dishType}>
+            {type}
+          </Text>
+        ))}
+      </View>
     </View>
   );
 
-  const FoodImage = ({ marginLeft, ...props }) => (
+  const FoodImage = (props) => (
     <View>
-      <Image
-        source={{ uri: props.food.image }}
-        style={{
-          width: 100,
-          height: 100,
-          borderRadius: 8,
-          marginLeft: marginLeft,
-        }}
+      <Image 
+        source={{ uri: props.food.image_url }} 
+        style={styles.foodImage} 
       />
     </View>
   );
@@ -70,16 +54,7 @@ export default function MenuItems({ restaurantName, foods, marginLeft }) {
               onPress={(checkboxValue) => selectItem(food, checkboxValue)}
             />
             <FoodInfo food={food} />
-            <View style={styles.rightContainer}>
-              <TouchableOpacity onPress={() => toggleFavourite(food)}>
-                <MaterialIcons 
-                  name={favouriteItems.find(item => item.id === food.id) ? "favorite" : "favorite-border"}
-                  size={24}
-                  color="red"
-                />
-              </TouchableOpacity>
-              <FoodImage food={food} marginLeft={marginLeft ? marginLeft : 0} />
-            </View>
+            <FoodImage food={food} />
           </View>
           <Divider width={0.5} orientation="vertical" />
         </View>
@@ -94,13 +69,40 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     margin: 20,
   },
+  foodInfo: {
+    width: 240,
+    justifyContent: "space-evenly",
+  },
   titleStyle: {
     fontSize: 19,
     fontWeight: "600",
   },
-  rightContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: 10
+  description: {
+    fontSize: 14,
+    color: "gray",
+    marginTop: 5,
+  },
+  price: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginTop: 5,
+  },
+  foodImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
+  },
+  dishTypes: {
+    flexDirection: "row",
+    marginTop: 5,
+    flexWrap: "wrap",
+  },
+  dishType: {
+    fontSize: 12,
+    color: "gray",
+    marginRight: 8,
+    backgroundColor: "#f5f5f5",
+    padding: 4,
+    borderRadius: 4,
   }
 });

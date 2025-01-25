@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Modal, StyleSheet, ScrollView } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { useCart } from "../../context/CartContext";
 import OrderItem from "./OrderItem";
 import { db } from "../../../firebase";
 import { collection, addDoc } from 'firebase/firestore';
@@ -9,9 +9,8 @@ import { collection, addDoc } from 'firebase/firestore';
 export default function ViewCart({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { items, restaurantName } = useSelector(
-    (state) => state.cartReducer.selectedItems
-  );
+  const { selectedItems } = useCart();
+  const { items, restaurantName } = selectedItems;
 
   const total = items
     .map((item) => item.price || 0)

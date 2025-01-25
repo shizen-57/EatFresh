@@ -7,6 +7,7 @@ import { realtimeDb, ref, onValue } from "../../../firebase";
 import RestaurantPreview from "./components/RestaurantPreview";
 import SearchBar from "../../Components/home/SearchBar";
 import { MaterialIcons } from '@expo/vector-icons';
+import RestaurantMarker from "./components/RestaurantMarker";
 
 const OSRM_API = "https://router.project-osrm.org/route/v1";
 const { width, height } = Dimensions.get('window');
@@ -66,21 +67,45 @@ export default function MapScreen() {
     initializeMap();
 
     const restaurantsRef = ref(realtimeDb, 'restaurants');
-    const unsubscribe = onValue(restaurantsRef, (snapshot) => {
-      if (snapshot.exists() && isMounted) {
-        const data = snapshot.val();
-        const restaurantList = Object.entries(data).map(([id, details]) => ({
-          id,
-          ...details
-        }));
-        setAllRestaurants(restaurantList);
-        setRestaurants(restaurantList);
+    const locationsRef = ref(realtimeDb, 'locations');
+    const menuItemsRef = ref(realtimeDb, 'menuItems'); // Add this line
+    
+    // Initialize menu items globally
+    onValue(menuItemsRef, (snapshot) => {
+      if (snapshot.exists()) {
+        global.menuItems = snapshot.val();
+      }
+    });
+
+    onValue(restaurantsRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const restaurantsData = snapshot.val();
+        
+        // Get locations data
+        onValue(locationsRef, (locationSnapshot) => {
+          if (locationSnapshot.exists()) {
+            const locationsData = locationSnapshot.val();
+            
+            // Combine restaurant and location data
+            const restaurantList = Object.entries(restaurantsData).map(([id, restaurant]) => ({
+              id,
+              ...restaurant,
+              location: {
+                ...locationsData[restaurant.location],
+                latitude: parseFloat(locationsData[restaurant.location].latitude),
+                longitude: parseFloat(locationsData[restaurant.location].longitude)
+              }
+            }));
+            
+            setRestaurants(restaurantList);
+          }
+        });
       }
     });
 
     return () => {
       isMounted = false;
-      unsubscribe();
+      global.menuItems = null; // Clean up on unmount
     };
   }, []);
 
@@ -171,14 +196,9 @@ export default function MapScreen() {
         onPress={handleMapPress}
       >
         {restaurants.map((restaurant) => (
-          <Marker
+          <RestaurantMarker
             key={`restaurant-${restaurant.id}`}
-            coordinate={{
-              latitude: restaurant.location.latitude,
-              longitude: restaurant.location.longitude
-            }}
-            title={restaurant.name}
-            description={restaurant.location.address1}
+            restaurant={restaurant}
             onPress={() => handleRestaurantSelect(restaurant)}
           />
         ))}
