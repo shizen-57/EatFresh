@@ -1,19 +1,24 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Modal, StyleSheet, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, Modal, StyleSheet, ScrollView, TextInput } from "react-native";
 import { useCart } from "../../context/CartContext";
 import OrderItem from "./OrderItem";
 import { db } from "../../../firebase";
 import { collection, addDoc } from 'firebase/firestore';
 
-
 export default function ViewCart({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { selectedItems } = useCart();
+  const [userDetails, setUserDetails] = useState({
+    name: '',
+    phone: '',
+    address: '',
+    message: ''
+  });
+  const { selectedItems, clearCart } = useCart();
   const { items, restaurantName } = selectedItems;
 
   const total = items
-    .map((item) => item.price || 0)
+    .map((item) => item.finalPrice || item.price || 0)
     .reduce((prev, curr) => prev + curr, 0);
 
   const totalFormatted = total.toLocaleString("en", {
@@ -21,20 +26,37 @@ export default function ViewCart({ navigation }) {
     currency: "BDT",
   });
 
+  const validateForm = () => {
+    if (!userDetails.phone || !userDetails.address) {
+      alert("Phone number and address are required");
+      return false;
+    }
+    if (userDetails.phone.length < 11) {
+      alert("Please enter a valid phone number");
+      return false;
+    }
+    return true;
+  };
+
   const addOrderToFirestore = async () => {
+    if (!validateForm()) return;
+
     setLoading(true);
     try {
       const orderData = {
-        items: items,
-        restaurantName: restaurantName,
-        total: total,
+        items: items.map(item => ({
+          ...item,
+          price: item.finalPrice || item.price,
+          customizations: item.selectedOptions || {}
+        })),
+        restaurantName,
+        total,
         status: "pending",
         createdAt: new Date().toISOString(),
         orderNumber: Math.floor(Math.random() * 100000).toString(),
         userDetails: {
-          name: "Guest User",
-          address: "Default Address",
-          phone: "Default Phone"
+          ...userDetails,
+          phone: userDetails.phone.trim()
         }
       };
 
@@ -43,51 +65,79 @@ export default function ViewCart({ navigation }) {
       
       setLoading(false);
       setModalVisible(false);
+      clearCart();
       navigation.navigate("OrderCompleted", { 
-        orderId: docRef.id 
+        orderId: docRef.id,
+        orderData 
       });
     } catch (error) {
       console.error("Error adding order: ", error);
       setLoading(false);
+      alert("Error placing order. Please try again.");
     }
   };
 
-  const checkoutModalContent = () => {
-    return (
-      <View style={styles.modalContainer}>
-        <View style={styles.modalCheckoutContainer}>
-          <Text style={styles.restaurantName}>{restaurantName}</Text>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {items.map((item, index) => (
-              <OrderItem key={index} item={item} />
-            ))}
-          </ScrollView>
+  const UserDetailsForm = () => (
+    <View style={styles.formContainer}>
+      <TextInput
+        style={styles.input}
+        placeholder="Your Name"
+        value={userDetails.name}
+        onChangeText={(text) => setUserDetails(prev => ({ ...prev, name: text }))}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Phone Number *"
+        keyboardType="phone-pad"
+        value={userDetails.phone}
+        onChangeText={(text) => setUserDetails(prev => ({ ...prev, phone: text }))}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Delivery Address *"
+        multiline
+        value={userDetails.address}
+        onChangeText={(text) => setUserDetails(prev => ({ ...prev, address: text }))}
+      />
+      <TextInput
+        style={[styles.input, styles.messageInput]}
+        placeholder="Message for Rider (Optional)"
+        multiline
+        value={userDetails.message}
+        onChangeText={(text) => setUserDetails(prev => ({ ...prev, message: text }))}
+      />
+    </View>
+  );
+
+  const checkoutModalContent = () => (
+    <View style={styles.modalContainer}>
+      <View style={styles.modalCheckoutContainer}>
+        <Text style={styles.restaurantName}>{restaurantName}</Text>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {items.map((item, index) => (
+            <OrderItem key={index} item={item} />
+          ))}
+          <UserDetailsForm />
           <View style={styles.subtotalContainer}>
-            <Text style={styles.subtotalText}>Subtotal</Text>
-            <Text>{totalFormatted}</Text>
+            <Text style={styles.subtotalText}>Total</Text>
+            <Text style={styles.totalPrice}>{totalFormatted}</Text>
           </View>
-          <TouchableOpacity
-            style={{
-              marginTop: 20,
-              backgroundColor: "black",
-              alignItems: "center",
-              padding: 13,
-              borderRadius: 30,
-              width: 300,
-              position: "relative",
-              marginLeft: 26,
-            }}
-            onPress={() => {
-              addOrderToFirestore();
-              setModalVisible(false);
-            }}
-          >
-            <Text style={{ color: "white", fontSize: 20 }}>Checkout</Text>
-          </TouchableOpacity>
-        </View>
+        </ScrollView>
+        <TouchableOpacity
+          style={[
+            styles.checkoutButton,
+            loading && styles.disabledButton
+          ]}
+          onPress={addOrderToFirestore}
+          disabled={loading}
+        >
+          <Text style={styles.checkoutButtonText}>
+            {loading ? "Placing Order..." : "Place Order"}
+          </Text>
+        </TouchableOpacity>
       </View>
-    );
-  };
+    </View>
+  );
 
   return (
     <>
@@ -162,4 +212,40 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginBottom: 10,
   },
+  formContainer: {
+    marginTop: 20,
+    paddingHorizontal: 10,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 15,
+    fontSize: 16,
+  },
+  messageInput: {
+    height: 80,
+    textAlignVertical: 'top',
+  },
+  checkoutButton: {
+    backgroundColor: "black",
+    padding: 15,
+    borderRadius: 30,
+    marginHorizontal: 20,
+    marginTop: 15,
+  },
+  disabledButton: {
+    opacity: 0.5,
+  },
+  checkoutButtonText: {
+    color: "white",
+    fontSize: 18,
+    textAlign: "center",
+    fontWeight: "600",
+  },
+  totalPrice: {
+    fontSize: 18,
+    fontWeight: "bold",
+  }
 });

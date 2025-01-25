@@ -1,16 +1,30 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 
-const About = ({ route }) => {
-  const { name, image, price, reviews, rating, categories } = route.params;
-  const formattedCategories = categories.map((cat) => cat.title).join(" • ");
+const About = ({ restaurant }) => {
+  if (!restaurant) return null;
+
+  const { 
+    name, 
+    image_url, 
+    price, 
+    review_count, 
+    rating, 
+    categories 
+  } = restaurant;
+
+  const formattedCategories = Array.isArray(categories) 
+    ? categories.join(" • ") 
+    : "";
 
   return (
     <View>
-      <RestaurantImage image={image} />
+      <RestaurantImage image={image_url} />
       <RestaurantTitle title={name} />
       <RestaurantDescription
-        description={`${formattedCategories} ${price ? " • " + price : ""} • 🎫 • ${rating} ⭐ (${reviews}+)`}
+        description={`${formattedCategories} ${
+          price ? " • " + price : ""
+        } • 🎫 • ${rating} ⭐ (${review_count}+)`}
       />
     </View>
   );

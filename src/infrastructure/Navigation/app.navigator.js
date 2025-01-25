@@ -13,6 +13,9 @@ import AccountScreen from "../../features/account/AccountScreen";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import BottomTabs from "../../Components/home/BottomTab";
 import CategoryScreen from "../../Screens/CategoryScreen";
+import { FavouriteRestaurantsScreen } from "../../features/favourites/screen/FavouriteRestaurantsScreen";
+import CartScreen from "../../Screens/CartScreen";
+import CheckoutScreen from "../../Screens/CheckoutScreen";
 
 export default function RootNavigation() {
   const Stack = createStackNavigator();
@@ -31,9 +34,40 @@ export default function RootNavigation() {
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
         <Stack.Screen name="MapScreen" component={MapScreen} />
         <Stack.Screen name="AccountScreen" component={AccountScreen} />
+        <Stack.Screen name="FavouriteScreen" component={FavouriteRestaurantsScreen} />
         <Stack.Screen name="RestaurantDetail" component={RestaurantDetail} />
         <Stack.Screen name="OrderCompleted" component={OrderCompleted} />
         <Stack.Screen name="CategoryScreen" component={CategoryScreen} />
+        <Stack.Screen 
+          name="Cart" 
+          component={CartScreen}
+          options={{
+            headerShown: true,
+            title: "Shopping Cart",
+            headerStyle: {
+              backgroundColor: 'white',
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+        <Stack.Screen 
+          name="Checkout" 
+          component={CheckoutScreen}
+          options={{
+            headerShown: true,
+            title: "Checkout",
+            headerStyle: {
+              backgroundColor: 'white',
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

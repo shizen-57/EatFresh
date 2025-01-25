@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { FavouritesContext } from "../../features/favourites/context/FavouriteContext";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function RestaurantItems({ navigation, restaurantData }) {
+  const { favourites, addToFavourites, removeFromFavourites } = useContext(FavouritesContext);
+
+  const isFavourite = (restaurant) => {
+    return favourites.find((r) => r.id === restaurant.id);
+  };
+
+  const toggleFavourite = (restaurant) => {
+    if (isFavourite(restaurant)) {
+      removeFromFavourites(restaurant);
+    } else {
+      addToFavourites(restaurant);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {restaurantData.map((restaurant) => (
@@ -10,21 +25,36 @@ export default function RestaurantItems({ navigation, restaurantData }) {
           key={restaurant.id}
           activeOpacity={0.9}
           style={styles.restaurantCard}
-          onPress={() =>
+          onPress={() => {
+            // Create full restaurant object with menu data
+            const restaurantWithMenu = {
+              ...restaurant,
+              menu: restaurant.menu || []  // Ensure menu exists
+            };
+            
             navigation.navigate("RestaurantDetail", {
-              id: restaurant.id,
-              name: restaurant.name,
-              image: restaurant.image_url,
-              price: restaurant.price,
-              reviews: restaurant.review_count,
-              rating: restaurant.rating,
-              categories: restaurant.categories,
-              menu: restaurant.menu,
-              location: restaurant.location
-            })
-          }
+              id: restaurant.id.replace('restaurantId', ''),
+              restaurant: restaurantWithMenu
+            });
+          }}
         >
           <RestaurantImage image={restaurant.image_url} />
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              right: 20,
+              top: 20,
+              zIndex: 1,
+              padding: 10,
+            }}
+            onPress={() => toggleFavourite(restaurant)}
+          >
+            <FontAwesome
+              name={isFavourite(restaurant) ? "heart" : "heart-o"}
+              size={25}
+              color={isFavourite(restaurant) ? "red" : "gray"}
+            />
+          </TouchableOpacity>
           <RestaurantInfo name={restaurant.name} rating={restaurant.rating} />
         </TouchableOpacity>
       ))}
@@ -40,9 +70,6 @@ const RestaurantImage = (props) => (
       }}
       style={styles.image}
     />
-    <TouchableOpacity style={styles.heartButton}>
-      <MaterialCommunityIcons name="heart-outline" size={25} color="#fff" />
-    </TouchableOpacity>
   </View>
 );
 
@@ -91,7 +118,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 20,
     top: 20,
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
     borderRadius: 50,
     padding: 8,
   },

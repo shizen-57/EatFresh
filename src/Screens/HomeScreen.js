@@ -7,6 +7,7 @@ import HeaderTabs from "../Components/home/HeaderTabs";
 import RestaurantItems from "../Components/home/RestaurantItems";
 import SearchBar from "../Components/home/SearchBar";
 import { realtimeDb, ref, onValue } from "../../firebase";
+import CartIcon from "../Components/home/CartIcon";
 
 export default function HomeScreen({ navigation }) {
   const [restaurantData, setRestaurantData] = useState([]);
@@ -14,29 +15,25 @@ export default function HomeScreen({ navigation }) {
   const [activeTab, setActiveTab] = useState("Delivery");
 
   useEffect(() => {
-    const fetchData = () => {
+    const fetchData = async () => {
       const restaurantsRef = ref(realtimeDb, 'restaurants');
-      const menuItemsRef = ref(realtimeDb, 'menuItems');
-
-      // Fetch restaurants
+      
       onValue(restaurantsRef, (snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.val();
-          const restaurants = Object.entries(data).map(([id, restaurant]) => ({
-            id,
-            ...restaurant,
-            menu: restaurant.menu.map(menuId => menuItems[menuId] || {})
-          })).filter(restaurant => 
+          // Map restaurant data and ensure menu is properly structured
+          const restaurants = Object.entries(data).map(([id, restaurant]) => {
+            return {
+              ...restaurant,
+              id,
+              menu: restaurant.menu ? restaurant.menu.filter(menuId => menuId) : [] // Filter out empty menu items
+            };
+          }).filter(restaurant => 
             restaurant.transactions?.includes(activeTab.toLowerCase())
           );
+          
+          console.log("Restaurant with menu:", restaurants[0]); // Debug log
           setRestaurantData(restaurants);
-        }
-      });
-
-      // Fetch menu items
-      onValue(menuItemsRef, (snapshot) => {
-        if (snapshot.exists()) {
-          setMenuItems(snapshot.val());
         }
       });
     };
@@ -78,6 +75,7 @@ export default function HomeScreen({ navigation }) {
       </ScrollView>
       <Divider width={1} />
       <BottomTabs />
+      <CartIcon navigation={navigation} />
     </View>
   );
 }
