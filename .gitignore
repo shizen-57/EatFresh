@@ -34,3 +34,8 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+<<<<<<< HEAD
+=======
+
+.codegpt
+>>>>>>> 8456e89e1ac2353da87da5a980d5e23ebfcd0661
