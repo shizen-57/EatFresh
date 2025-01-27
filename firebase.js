@@ -1,5 +1,5 @@
 import { initializeApp } from '@firebase/app';
-import { getFirestore, collection, query, where, getDocs } from '@firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, addDoc, updateDoc, doc, getDoc, onSnapshot } from '@firebase/firestore';
 import { getDatabase, ref, onValue } from '@firebase/database';
 import { getAuth } from 'firebase/auth';
 
@@ -33,8 +33,13 @@ export {
   query,
   where,
   getDocs,
+  addDoc,
+  updateDoc,
+  doc,
+  getDoc,
   ref,
-  onValue
+  onValue,
+  onSnapshot
 };
 
 export default firebase;

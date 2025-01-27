@@ -4,7 +4,7 @@ import { useCart } from "../context/CartContext";
 import OrderItem from "../Components/RestaurantDetail/OrderItem";
 import { db } from "../../firebase";
 import { collection, addDoc } from 'firebase/firestore';
-
+import { Divider } from 'react-native-elements'; // Add this import
 
 function OrderSummaryItem({ item }) {
   return (
