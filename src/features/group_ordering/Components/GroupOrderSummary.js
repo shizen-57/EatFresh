@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Text } from 'react-native-elements';
+import { View, StyleSheet, Text } from 'react-native'; // Use React Native's Text
 import { FontAwesome5 } from '@expo/vector-icons';
 
 export default function GroupOrderSummary({ memberCount, totalItems }) {

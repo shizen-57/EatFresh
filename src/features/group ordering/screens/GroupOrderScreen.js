@@ -8,7 +8,7 @@ import GroupOrderItem from '../Components/GroupOrderItem';
 import QRCodeGenerator from '../Components/QRCodeGenerator';
 
 export default function GroupOrderScreen({ navigation }) {
-  const { groupOrder, groupCart, members, finalizeOrder, setGroupOrder } = useGroupOrder();
+  const { groupOrder, groupCart, members, currentMember, finalizeOrder, setGroupOrder } = useGroupOrder();
   const [qrModalVisible, setQrModalVisible] = useState(false);
 
   useFocusEffect(
@@ -53,7 +53,7 @@ export default function GroupOrderScreen({ navigation }) {
   if (!groupOrder) {
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>No active group order</Text>
+        <Text style={styles.emptyText}>Loading group order...</Text>
       </View>
     );
   }
@@ -66,6 +66,27 @@ export default function GroupOrderScreen({ navigation }) {
           totalItems={groupCart.length}
         />
         
+        {/* Always show Order Now button if cart is empty */}
+        {groupCart.length === 0 && (
+          <View style={styles.orderNowContainer}>
+            <Text style={styles.orderPromptText}>
+              No items in cart yet. Be the first to add something!
+            </Text>
+            <Button
+              title="Order Now"
+              onPress={handleOrderNow}
+              buttonStyle={styles.orderNowButton}
+              titleStyle={styles.orderNowButtonText}
+              icon={{
+                name: 'plus',
+                type: 'font-awesome',
+                size: 15,
+                color: '#000',
+              }}
+            />
+          </View>
+        )}
+
         <Text style={styles.sectionTitle}>Group Members</Text>
         {members.map((member, index) => (
           <Text key={index} style={styles.memberItem}>
@@ -93,7 +114,8 @@ export default function GroupOrderScreen({ navigation }) {
         )}
       </ScrollView>
 
-      {groupOrder?.creator === members[0] && (
+      {/* Only show these buttons for group creator */}
+      {groupOrder?.creator === currentMember && (
         <View style={styles.buttonContainer}>
           <Button
             title="Finalize Order"
@@ -240,5 +262,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#ff3b30',
     borderRadius: 25,
     paddingVertical: 12,
+  },
+  orderPromptText: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 15,
   },
 });

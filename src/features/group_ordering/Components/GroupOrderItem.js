@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
-import { Text } from 'react-native-elements';
+import { View, StyleSheet, Image, Text } from 'react-native'; // Use React Native's Text
 
 export default function GroupOrderItem({ item }) {
   return (

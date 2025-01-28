@@ -35,7 +35,7 @@ export default function CartIcon({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    bottom: 20,
+    bottom: 100,
     right: 20,
     zIndex: 999,
   },

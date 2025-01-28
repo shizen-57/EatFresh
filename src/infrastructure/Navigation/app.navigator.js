@@ -16,10 +16,12 @@ import CategoryScreen from "../../Screens/CategoryScreen";
 import { FavouriteRestaurantsScreen } from "../../features/favourites/screen/FavouriteRestaurantsScreen";
 import CartScreen from "../../Screens/CartScreen";
 import CheckoutScreen from "../../Screens/CheckoutScreen";
-import CreateGroupScreen from "../../features/group ordering/screens/CreateGroupScreen";
-import JoinGroupScreen from "../../features/group ordering/screens/JoinGroupScreen";
-import GroupOrderScreen from "../../features/group ordering/screens/GroupOrderScreen";
-import ScanQRCodeScreen from "../../features/group ordering/screens/ScanQRCodeScreen";
+import CreateGroupScreen from "../../features/group_ordering/screens/CreateGroupScreen";
+import JoinGroupScreen from "../../features/group_ordering/screens/JoinGroupScreen";
+import GroupOrderScreen from "../../features/group_ordering/screens/GroupOrderScreen";
+import ScanQRCodeScreen from "../../features/group_ordering/screens/ScanQRCodeScreen";
+import GroupCartCheckout from "../../features/group_ordering/screens/GroupCartCheckout";
+import GroupOrder_OrderedItem from "../../features/group_ordering/screens/GroupOrder_OrderedItem";
 
 export default function RootNavigation() {
   const Stack = createStackNavigator();
@@ -102,6 +104,22 @@ export default function RootNavigation() {
           options={{
             headerShown: true,
             title: "Scan QR Code"
+          }}
+        />
+        <Stack.Screen 
+          name="GroupCartCheckout" 
+          component={GroupCartCheckout}
+          options={{
+            headerShown: true,
+            title: "Group Order Checkout"
+          }}
+        />
+        <Stack.Screen 
+          name="GroupOrder_OrderedItem" 
+          component={GroupOrder_OrderedItem}
+          options={{
+            headerShown: true,
+            title: "Order Confirmation"
           }}
         />
       </Stack.Navigator>

@@ -4,6 +4,7 @@ import { useCart } from "../../context/CartContext";
 import OrderItem from "./OrderItem";
 import { db } from "../../../firebase";
 import { collection, addDoc } from 'firebase/firestore';
+import { useGroupOrder } from '../../features/group_ordering/context/GroupOrderContext';
 
 export default function ViewCart({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -16,6 +17,12 @@ export default function ViewCart({ navigation }) {
   });
   const { selectedItems, clearCart } = useCart();
   const { items, restaurantName } = selectedItems;
+  const { groupOrder } = useGroupOrder();
+
+  // Don't show ViewCart in group order state
+  if (groupOrder) {
+    return null;
+  }
 
   const total = items
     .map((item) => item.finalPrice || item.price || 0)

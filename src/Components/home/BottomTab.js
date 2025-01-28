@@ -29,7 +29,7 @@ const Icon = ({ iconFamily, text, onPress }) => (
   <TouchableOpacity style={styles.iconContainer} onPress={onPress}>
     <MaterialCommunityIcons
       name={iconFamily}
-      size={26}
+      size={22}  // proportionally decreased
       style={styles.icon}
     />
     <Text style={styles.iconText}>{text}</Text>
@@ -39,28 +39,33 @@ const Icon = ({ iconFamily, text, onPress }) => (
 const styles = {
   container: {
     flexDirection: "row",
-    margin: 10,
-    marginHorizontal: 30,
+    margin: 8,
+    marginHorizontal: 20,
     justifyContent: "space-between",
-    backgroundColor: 'white',
+    backgroundColor: '#008b8b', // deep cyan
     borderRadius: 30,
-    padding: 10,
-    elevation: 8,
+    padding: 8,
+    elevation: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
+    position: 'absolute',
+    bottom: 10,
+    left: 1,
+    right: 1,
   },
   iconContainer: {
     alignItems: 'center',
+    paddingHorizontal: 8,
   },
   icon: {
-    marginBottom: 3,
-    color: '#333',
+    marginBottom: 2,  // reduced spacing
+    color: '#fff',
   },
   iconText: {
-    fontSize: 12,
+    fontSize: 10,  // proportionally decreased
     fontFamily: 'Poppins_600SemiBold',
-    color: '#333',
+    color: '#fff',
   },
 };

@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, ScrollView, ActivityIndicator } from "react-native";
+import { ActivityIndicator, Alert, ScrollView, Text, View } from "react-native";
 import { Divider } from "react-native-elements";
-import { realtimeDb, ref, onValue } from "../../firebase";
+import { onValue, realtimeDb, ref } from "../../firebase";
 import About from "../Components/RestaurantDetail/About";
+import CartIconManager from '../Components/RestaurantDetail/CartIconManager';
 import MenuItems from "../Components/RestaurantDetail/MenuItems";
-import CartIcon from "../Components/RestaurantDetail/CartIcon"; // Make sure this path is correct
+import { useGroupOrder } from "../features/group_ordering/context/GroupOrderContext";
+import GroupCartIcon from "../features/group_ordering/group_cart/GroupCartIcon";
 
 const RestaurantDetail = ({ route, navigation }) => {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { restaurant: initialRestaurant } = route.params;
+  const { groupOrder, currentMember, addItemToGroupCart } = useGroupOrder();
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -61,6 +64,23 @@ const RestaurantDetail = ({ route, navigation }) => {
     fetchMenuItems();
   }, [initialRestaurant]);
 
+  const handleAddToCart = async (item) => {
+    if (groupOrder) {
+      try {
+        await addItemToGroupCart({
+          ...item,
+          restaurantName: initialRestaurant.name,
+          restaurantId: initialRestaurant.id
+        }, currentMember);
+        Alert.alert('Success', 'Item added to group cart');
+      } catch (error) {
+        Alert.alert('Error', 'Failed to add item to group cart');
+      }
+    } else {
+      // Regular cart logic
+    }
+  };
+
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -96,7 +116,7 @@ const RestaurantDetail = ({ route, navigation }) => {
           foods={menuItems}
         />
       </ScrollView>
-      <CartIcon navigation={navigation} />
+      <CartIconManager navigation={navigation} />
     </View>
   );
 };

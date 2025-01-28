@@ -1,8 +1,10 @@
 import React, { useState, memo, useCallback, useMemo } from "react";
 import { View, Text, StyleSheet, Image, ScrollView, Modal, TouchableOpacity } from "react-native";
+import { Icon } from 'react-native-elements'; // Add this import
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Divider } from "react-native-elements";
 import { useCart } from "../../context/CartContext";
+import { useGroupOrder } from "../../features/group_ordering/context/GroupOrderContext";
 
 // Subcomponents
 const FoodInfo = memo(({ food, onPress }) => (
@@ -28,11 +30,11 @@ const FoodImage = memo(({ food }) => (
   />
 ));
 
-const MenuItem = memo(({ food, onSelect, isChecked }) => (
+const MenuItem = memo(({ food, onSelect, isChecked, isGroupOrder }) => (
   <View style={styles.menuItemStyle}>
     <BouncyCheckbox
       iconStyle={{ borderColor: "lightgray", borderRadius: 0 }}
-      fillColor="green"
+      fillColor={isGroupOrder ? "#4CAF50" : "green"}
       isChecked={isChecked}
       onPress={() => onSelect(food)}
     />
@@ -48,8 +50,18 @@ const CustomizationModal = memo(({
   onClose, 
   onOptionSelect, 
   onAddToCart, 
-  calculateTotalPrice 
+  calculateTotalPrice,
+  isGroupOrder 
 }) => {
+  const [quantity, setQuantity] = useState(1);
+
+  // Add quantity controls
+  const adjustQuantity = (increment) => {
+    setQuantity(prev => Math.max(1, prev + increment));
+  };
+
+  const finalPrice = calculateTotalPrice(selectedFood, selectedOptions) * quantity;
+
   if (!selectedFood) return null;
 
   return (
@@ -93,15 +105,45 @@ const CustomizationModal = memo(({
                 ))}
               </View>
             ))}
+            <View style={styles.quantityContainer}>
+              <Text style={styles.quantityLabel}>Quantity</Text>
+              <View style={styles.quantityControls}>
+                <TouchableOpacity 
+                  onPress={() => adjustQuantity(-1)}
+                  style={styles.quantityButton}
+                >
+                  <Icon 
+                    name="minus" 
+                    type="font-awesome-5" 
+                    size={12} 
+                    color="#000"
+                  />
+                </TouchableOpacity>
+                <Text style={styles.quantityText}>{quantity}</Text>
+                <TouchableOpacity 
+                  onPress={() => adjustQuantity(1)}
+                  style={styles.quantityButton}
+                >
+                  <Icon 
+                    name="plus" 
+                    type="font-awesome-5" 
+                    size={12} 
+                    color="#000"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
             <Text style={styles.totalPrice}>
-              Total: ৳{calculateTotalPrice(selectedFood, selectedOptions)}
+              Total: ৳{finalPrice}
             </Text>
           </ScrollView>
           <TouchableOpacity
             style={styles.addButton}
-            onPress={onAddToCart}
+            onPress={() => onAddToCart(quantity)}
           >
-            <Text style={styles.addButtonText}>Add to Cart</Text>
+            <Text style={styles.addButtonText}>
+              Add to {isGroupOrder ? 'Group Cart' : 'Cart'}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -111,15 +153,22 @@ const CustomizationModal = memo(({
 
 const MenuItemsComponent = ({ restaurantName, restaurantId, foods }) => {
   const { selectedItems, addToCart } = useCart();
+  const { groupOrder, addItemToGroupCart, currentMember, groupCart } = useGroupOrder();
   
-  // Update the isChecked logic
+  // Update isItemInCart to check for current user's items only
   const isItemInCart = useCallback((itemId) => {
-    if (!selectedItems?.restaurants) return false;
+    if (groupOrder) {
+      // Only check items added by the current user
+      return groupCart.some(item => 
+        item.id === itemId && item.addedBy === currentMember
+      );
+    }
     
+    if (!selectedItems?.restaurants) return false;
     return Object.values(selectedItems.restaurants).some(restaurant => 
       restaurant.items.some(item => item.id === itemId)
     );
-  }, [selectedItems]);
+  }, [selectedItems, groupOrder, groupCart, currentMember]);
 
   const [modalState, setModalState] = useState({
     visible: false,
@@ -162,24 +211,29 @@ const MenuItemsComponent = ({ restaurantName, restaurantId, foods }) => {
     return basePrice + optionsPrice;
   }, []);
 
-  const handleAddToCart = useCallback(() => {
+  const handleAddToCart = useCallback((quantity) => {
     const { selectedFood, selectedOptions } = modalState;
     const basePrice = calculateTotalPrice(selectedFood, selectedOptions);
     
-    addToCart(
-      {
-        ...selectedFood,
-        selectedOptions,
-        price: selectedFood.price,
-        finalPrice: basePrice
-      },
+    const itemToAdd = {
+      ...selectedFood,
+      selectedOptions,
+      price: selectedFood.price,
+      finalPrice: basePrice * quantity,
       restaurantName,
       restaurantId,
-      true
-    );
+      addedAt: new Date().toISOString(),
+      quantity
+    };
+
+    if (groupOrder) {
+      addItemToGroupCart(itemToAdd, currentMember);
+    } else {
+      addToCart(itemToAdd, restaurantName, restaurantId, true);
+    }
     
     handleCloseModal();
-  }, [modalState, calculateTotalPrice, addToCart, restaurantName, restaurantId]);
+  }, [modalState, calculateTotalPrice, groupOrder, addItemToGroupCart, addToCart]);
 
   const memoizedFoods = useMemo(() => (
     foods.map((food) => (
@@ -188,11 +242,12 @@ const MenuItemsComponent = ({ restaurantName, restaurantId, foods }) => {
           food={food}
           onSelect={handleFoodSelect}
           isChecked={isItemInCart(food.id)}
+          isGroupOrder={!!groupOrder}
         />
         <Divider width={0.5} />
       </View>
     ))
-  ), [foods, isItemInCart, handleFoodSelect]);
+  ), [foods, isItemInCart, handleFoodSelect, groupOrder]);
 
   if (!Array.isArray(foods) || foods.length === 0) {
     return (
@@ -215,6 +270,7 @@ const MenuItemsComponent = ({ restaurantName, restaurantId, foods }) => {
         onOptionSelect={handleOptionSelect}
         onAddToCart={handleAddToCart}
         calculateTotalPrice={calculateTotalPrice}
+        isGroupOrder={!!groupOrder}
       />
     </ScrollView>
   );
@@ -340,6 +396,32 @@ const styles = StyleSheet.create({
   },
   menuList: {
     padding: 20,
+  },
+  groupAddButton: {
+    backgroundColor: '#4CAF50',
+  },
+  quantityContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 15,
+    padding: 10,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
+  },
+  quantityControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  quantityButton: {
+    backgroundColor: 'white',
+    padding: 8,
+    borderRadius: 15,
+    marginHorizontal: 10,
+  },
+  quantityText: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
