@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Alert, ScrollView, Text, View, StyleSheet, Button } from "react-native";
 import { Divider } from "react-native-elements";
 import { onValue, realtimeDb, ref } from "../../firebase";
 import About from "../Components/RestaurantDetail/About";
@@ -7,6 +7,7 @@ import CartIconManager from '../Components/RestaurantDetail/CartIconManager';
 import MenuItems from "../Components/RestaurantDetail/MenuItems";
 import { useGroupOrder } from "../features/group_ordering/context/GroupOrderContext";
 import GroupCartIcon from "../features/group_ordering/group_cart/GroupCartIcon";
+import { useCatering } from "../features/catering/context/CateringContext";
 
 const RestaurantDetail = ({ route, navigation }) => {
   const [menuItems, setMenuItems] = useState([]);
@@ -14,7 +15,8 @@ const RestaurantDetail = ({ route, navigation }) => {
   const [error, setError] = useState(null);
   const { restaurant: initialRestaurant } = route.params;
   const { groupOrder, currentMember, addItemToGroupCart } = useGroupOrder();
-
+  const cateringContext = useCatering();
+ 
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
@@ -76,6 +78,17 @@ const RestaurantDetail = ({ route, navigation }) => {
       } catch (error) {
         Alert.alert('Error', 'Failed to add item to group cart');
       }
+    } else if (cateringContext && item.cateringAvailable) {
+      try {
+        cateringContext.addToCateringCart({
+          ...item,
+          restaurantName: initialRestaurant.name,
+          restaurantId: initialRestaurant.id
+        });
+        Alert.alert('Success', 'Item added to catering cart');
+      } catch (error) {
+        Alert.alert('Error', 'Failed to add item to catering cart');
+      }
     } else {
       // Regular cart logic
     }
@@ -83,7 +96,7 @@ const RestaurantDetail = ({ route, navigation }) => {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#00ff00" />
       </View>
     );
@@ -91,7 +104,7 @@ const RestaurantDetail = ({ route, navigation }) => {
 
   if (error) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.errorContainer}>
         <Text>Error: {error}</Text>
       </View>
     );
@@ -99,26 +112,51 @@ const RestaurantDetail = ({ route, navigation }) => {
 
   if (!initialRestaurant) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.errorContainer}>
         <Text>Restaurant not found</Text>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <About restaurant={initialRestaurant} />
-        <Divider width={1.8} style={{ marginVertical: 20 }} />
+        <About 
+          restaurant={initialRestaurant} 
+          navigation={navigation}
+          menuItems={menuItems}
+        />
+        <Divider width={1.8} style={styles.divider} />
         <MenuItems 
           restaurantName={initialRestaurant.name}
           restaurantId={initialRestaurant.id}
           foods={menuItems}
+          onCateringSelect={cateringContext?.addToCateringCart}
         />
       </ScrollView>
       <CartIconManager navigation={navigation} />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  divider: {
+    marginVertical: 20,
+  },
+});
 
 export default RestaurantDetail;

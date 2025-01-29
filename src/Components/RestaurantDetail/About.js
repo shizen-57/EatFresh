@@ -1,8 +1,29 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from "react-native";
 
-const About = ({ restaurant }) => {
+const About = ({ restaurant, navigation, menuItems }) => {
   if (!restaurant) return null;
+
+  const handleCateringPress = () => {
+    if (navigation) {
+      // Filter menu items that are available for catering
+      const cateringItems = menuItems.map(item => ({
+        ...item,
+        image: item.image_url || item.image,
+        basePrice: item.price,
+        minGuests: 10,
+        // Ensure options are properly structured
+        options: item.options || {}
+      }));
+
+      navigation.navigate('CateringMenuScreen', {
+        menuItems: cateringItems,
+        restaurantName: restaurant.name
+      });
+    } else {
+      Alert.alert('Navigation Error', 'Unable to navigate to catering menu');
+    }
+  };
 
   const { 
     name, 
@@ -10,7 +31,8 @@ const About = ({ restaurant }) => {
     price, 
     review_count, 
     rating, 
-    categories 
+    categories,
+    transactions
   } = restaurant;
 
   const formattedCategories = Array.isArray(categories) 
@@ -26,6 +48,14 @@ const About = ({ restaurant }) => {
           price ? " • " + price : ""
         } • 🎫 • ${rating} ⭐ (${review_count}+)`}
       />
+      {transactions.includes("catering") && (
+        <TouchableOpacity 
+          style={styles.cateringButton}
+          onPress={handleCateringPress}
+        >
+          <Text style={styles.cateringButtonText}>Catering Service Available</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -58,6 +88,20 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     marginTop: 10,
     marginHorizontal: 15,
+  },
+  cateringButton: {
+    borderColor: '#32CD32',
+    borderWidth: 2,
+    padding: 15,
+    borderRadius: 25,
+    alignItems: 'center',
+    margin: 20,
+    backgroundColor: '#fff',
+  },
+  cateringButtonText: {
+    color: '#32CD32',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

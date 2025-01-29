@@ -1,95 +1,149 @@
-import React, { useEffect, useState } from 'react';
-import { View, SafeAreaView, ScrollView, StyleSheet, StatusBar, Platform } from 'react-native';
-import { Divider } from "react-native-elements";
-import HeaderTabs from "../Components/home/HeaderTabs";
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, SafeAreaView, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { Text } from 'react-native-elements';
 import RestaurantItems from "../Components/home/RestaurantItems";
-import { realtimeDb, ref, onValue } from "../../firebase";
+import { realtimeDb, ref, onValue, off } from "../../firebase";
+import { COLORS, SPACING } from '../theme';
 
 export default function CategoryScreen({ route, navigation }) {
-  const { category } = route.params;
+  const { categoryName, categoryAlias } = route.params;
   const [restaurants, setRestaurants] = useState([]);
-  const [activeTab, setActiveTab] = useState("Delivery");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchRestaurants = useCallback(() => {
+    const restaurantsRef = ref(realtimeDb, 'restaurants');
+    
+    onValue(restaurantsRef, (snapshot) => {
+      try {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const filteredRestaurants = Object.entries(data)
+            .map(([id, restaurant]) => ({
+              id,
+              ...restaurant
+            }))
+            .filter(restaurant => 
+              restaurant.categories?.some(cat => 
+                cat.toLowerCase() === categoryAlias.toLowerCase()
+              )
+            )
+            .sort((a, b) => b.rating - a.rating); // Sort by rating
+
+          setRestaurants(filteredRestaurants);
+        }
+      } catch (err) {
+        setError('Failed to load restaurants');
+        console.error('Error fetching restaurants:', err);
+      } finally {
+        setLoading(false);
+      }
+    }, (error) => {
+      setError('Failed to load restaurants');
+      setLoading(false);
+      console.error('Error fetching restaurants:', error);
+    });
+
+    // Cleanup
+    return () => off(restaurantsRef);
+  }, [categoryAlias]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const restaurantsRef = ref(realtimeDb, 'restaurants');
-        const menuItemsRef = ref(realtimeDb, 'menuItems');
+    navigation.setOptions({
+      title: categoryName,
+      headerStyle: {
+        backgroundColor: '#ffffff',
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      headerTintColor: '#282c3f',
+      headerTitleStyle: {
+        fontWeight: '600',
+        fontSize: 16,
+      },
+    });
 
-        onValue(restaurantsRef, (restaurantSnapshot) => {
-          onValue(menuItemsRef, (menuSnapshot) => {
-            const restaurantsData = restaurantSnapshot.val();
-            const menuItemsData = menuSnapshot.val();
+    fetchRestaurants();
+  }, [categoryName, fetchRestaurants, navigation]);
 
-            // Filter restaurants based on both category and delivery type
-            const filteredRestaurants = Object.entries(restaurantsData)
-              .filter(([_, restaurant]) => {
-                const hasCategory = restaurant.menu.some(menuItemId => {
-                  const menuItem = menuItemsData[menuItemId];
-                  return menuItem && 
-                         menuItem.dish_type && 
-                         menuItem.dish_type.includes(category);
-                });
-                
-                const hasDeliveryType = restaurant.transactions?.includes(activeTab.toLowerCase());
-                return hasCategory && hasDeliveryType;
-              })
-              .map(([id, data]) => ({
-                id,
-                ...data
-              }));
+  if (loading) {
+    return (
+      <View style={styles.centerContainer}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+    );
+  }
 
-            setRestaurants(filteredRestaurants);
-          });
-        });
-
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-
-    return () => {
-      const restaurantsRef = ref(realtimeDb, 'restaurants');
-      const menuItemsRef = ref(realtimeDb, 'menuItems');
-      onValue(restaurantsRef, () => {});
-      onValue(menuItemsRef, () => {});
-    };
-  }, [category, activeTab]);
+  if (error) {
+    return (
+      <View style={styles.centerContainer}>
+        <Text style={styles.errorText}>{error}</Text>
+      </View>
+    );
+  }
 
   return (
-    <View style={styles.container}>
-      <StatusBar backgroundColor="white" barStyle="dark-content" />
-      <View style={styles.headerContainer}>
-        <HeaderTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-      </View>
-      <View style={styles.content}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <RestaurantItems 
-            restaurantData={restaurants} 
-            navigation={navigation}
-          />
-        </ScrollView>
-      </View>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {restaurants.length > 0 ? (
+          <>
+            <Text style={styles.resultCount}>
+              {restaurants.length} Restaurant{restaurants.length !== 1 ? 's' : ''} Found
+            </Text>
+            <RestaurantItems 
+              restaurantData={restaurants} 
+              navigation={navigation}
+            />
+          </>
+        ) : (
+          <View style={styles.noResults}>
+            <Text style={styles.noResultsText}>
+              No restaurants available in this category
+            </Text>
+          </View>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+    backgroundColor: '#ffffff',
   },
-  headerContainer: {
-    backgroundColor: "white",
-    padding: 15,
-    borderBottomColor: "#eee",
-    borderBottomWidth: 1,
-  },
-  content: {
+  centerContainer: {
     flex: 1,
-    backgroundColor: "#fff",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+  },
+  resultCount: {
+    fontSize: 13,
+    color: '#686b78',
+    padding: SPACING.md,
+    backgroundColor: '#ffffff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f1f6',
+  },
+  noResults: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: SPACING.xl,
+    backgroundColor: '#ffffff',
+  },
+  noResultsText: {
+    fontSize: 15,
+    color: '#686b78',
+    textAlign: 'center',
+  },
+  errorText: {
+    fontSize: 15,
+    color: '#fc8019',
+    textAlign: 'center',
   }
 });

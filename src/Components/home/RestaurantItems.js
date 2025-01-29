@@ -55,7 +55,7 @@ export default function RestaurantItems({ navigation, restaurantData }) {
               color={isFavourite(restaurant) ? "red" : "gray"}
             />
           </TouchableOpacity>
-          <RestaurantInfo name={restaurant.name} rating={restaurant.rating} />
+          <RestaurantInfo name={restaurant.name} rating={restaurant.rating} transactions={restaurant.transactions} />
         </TouchableOpacity>
       ))}
     </View>
@@ -78,6 +78,7 @@ const RestaurantInfo = (props) => (
     <View>
       <Text style={styles.restaurantName}>{props.name}</Text>
       <Text style={styles.deliveryTime}>30-45 • min</Text>
+      <Text style={styles.transactions}>{props.transactions.join(', ')}</Text>
     </View>
     <View style={styles.ratingContainer}>
       <Text>{props.rating}</Text>
@@ -134,6 +135,10 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   deliveryTime: {
+    fontSize: 13,
+    color: "gray",
+  },
+  transactions: {
     fontSize: 13,
     color: "gray",
   },

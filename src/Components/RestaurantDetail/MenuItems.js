@@ -1,5 +1,5 @@
 import React, { useState, memo, useCallback, useMemo } from "react";
-import { View, Text, StyleSheet, Image, ScrollView, Modal, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView, Modal, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Icon } from 'react-native-elements'; // Add this import
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Divider } from "react-native-elements";
@@ -31,16 +31,39 @@ const FoodImage = memo(({ food }) => (
 ));
 
 const MenuItem = memo(({ food, onSelect, isChecked, isGroupOrder }) => (
-  <View style={styles.menuItemStyle}>
-    <BouncyCheckbox
-      iconStyle={{ borderColor: "lightgray", borderRadius: 0 }}
-      fillColor={isGroupOrder ? "#4CAF50" : "green"}
-      isChecked={isChecked}
-      onPress={() => onSelect(food)}
-    />
-    <FoodInfo food={food} onPress={() => onSelect(food)} />
-    <FoodImage food={food} />
-  </View>
+  <TouchableOpacity 
+    style={styles.menuItemStyle} 
+    onPress={() => onSelect(food)}
+    activeOpacity={0.7}
+  >
+    <View style={styles.contentContainer}>
+      <View style={styles.info}>
+        <Text style={styles.name}>{food.name}</Text>
+        <Text style={styles.description} numberOfLines={2}>
+          {food.description}
+        </Text>
+        <View style={styles.priceContainer}>
+          <Text style={styles.price}>৳{food.price}</Text>
+          {food.customizable && (
+            <Text style={styles.customizableText}>Customizable</Text>
+          )}
+        </View>
+      </View>
+      <View style={styles.imageContainer}>
+        <Image
+          source={{ uri: food.image_url }}
+          style={styles.foodImage}
+          PlaceholderContent={<ActivityIndicator />}
+        />
+      </View>
+    </View>
+    {food.popularItem && (
+      <View style={styles.popularBadge}>
+        <Icon name="star" type="material" size={16} color="#fff" />
+        <Text style={styles.popularText}>Popular</Text>
+      </View>
+    )}
+  </TouchableOpacity>
 ));
 
 const CustomizationModal = memo(({ 
@@ -280,9 +303,73 @@ const MenuItems = memo(MenuItemsComponent);
 
 const styles = StyleSheet.create({
   menuItemStyle: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    margin: 20,
+    padding: 16,
+    backgroundColor: '#fff',
+    position: 'relative',
+  },
+  contentContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  info: {
+    flex: 1,
+    marginRight: 16,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 4,
+    color: '#000',
+  },
+  description: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+    lineHeight: 20,
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  price: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#000',
+    marginRight: 8,
+  },
+  customizableText: {
+    fontSize: 13,
+    color: '#00a854',
+    fontWeight: '500',
+  },
+  imageContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: '#f5f5f5',
+  },
+  foodImage: {
+    width: '100%',
+    height: '100%',
+  },
+  popularBadge: {
+    position: 'absolute',
+    top: 8,
+    left: 16,
+    backgroundColor: '#ff3008',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  popularText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '500',
+    marginLeft: 4,
   },
   foodInfo: {
     width: 240,

@@ -5,6 +5,7 @@ import RootNavigation from "./src/infrastructure/Navigation/app.navigator";
 import { CartProvider } from './src/context/CartContext';
 import { FavouritesContextProvider } from "./src/features/favourites/context/FavouriteContext";
 import { GroupOrderProvider } from './src/features/group_ordering/context/GroupOrderContext';
+import { CateringProvider } from './src/features/catering/context/CateringContext';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -36,7 +37,9 @@ export default function App() {
     <CartProvider>
       <FavouritesContextProvider>
         <GroupOrderProvider>
-          <RootNavigation />
+          <CateringProvider>
+            <RootNavigation />
+          </CateringProvider>
         </GroupOrderProvider>
       </FavouritesContextProvider>
     </CartProvider>

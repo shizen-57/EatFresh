@@ -45,14 +45,6 @@ export default function HeaderBar({
           ]}>
             {title}
           </Text>
-          {isLarge && (
-            <Text style={[
-              styles.subtitle,
-              transparent && styles.lightText
-            ]}>
-              Explore what you want
-            </Text>
-          )}
         </View>
 
         {rightComponent && (

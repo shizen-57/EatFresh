@@ -26,8 +26,22 @@ export default function GroupCartCheckout({ navigation, route }) {
     }, {});
   }, [items]);
 
+  // Update total calculation to include quantity and selected options
+  const calculateItemTotal = (item) => {
+    const basePrice = item.price || 0;
+    const quantity = item.quantity || 1;
+    let optionsTotal = 0;
+
+    if (item.selectedOptions) {
+      optionsTotal = Object.values(item.selectedOptions)
+        .reduce((sum, option) => sum + (option.price || 0), 0);
+    }
+
+    return (basePrice + optionsTotal) * quantity;
+  };
+
   const totalAmount = items.reduce((sum, item) => 
-    sum + (item.price * (item.quantity || 1)), 0
+    sum + calculateItemTotal(item), 0
   );
 
   const handleCheckout = async () => {
@@ -61,23 +75,48 @@ export default function GroupCartCheckout({ navigation, route }) {
     }
   };
 
+  const renderMemberItems = (member, memberItems) => (
+    <View key={member} style={styles.memberItems}>
+      <Text style={styles.memberName}>{member}'s Items</Text>
+      {memberItems.map((item, index) => (
+        <View key={index} style={styles.item}>
+          <View style={styles.itemHeader}>
+            <Text style={styles.itemName}>{item.name}</Text>
+            <Text style={styles.itemQuantity}>x{item.quantity || 1}</Text>
+          </View>
+          
+          {item.selectedOptions && (
+            <View style={styles.optionsContainer}>
+              {Object.entries(item.selectedOptions).map(([category, option]) => (
+                <Text key={category} style={styles.optionText}>
+                  {category}: {option.name} (+৳{option.price})
+                </Text>
+              ))}
+            </View>
+          )}
+          
+          <Text style={styles.itemTotal}>
+            ৳{calculateItemTotal(item)}
+          </Text>
+        </View>
+      ))}
+      <View style={styles.memberTotal}>
+        <Text style={styles.memberTotalText}>
+          Subtotal: ৳{memberItems.reduce((sum, item) => sum + calculateItemTotal(item), 0)}
+        </Text>
+      </View>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <ScrollView>
         {/* Order Summary */}
         <View style={styles.summarySection}>
           <Text style={styles.sectionTitle}>Order Summary</Text>
-          {Object.entries(groupedItems).map(([member, memberItems]) => (
-            <View key={member} style={styles.memberItems}>
-              <Text style={styles.memberName}>{member}'s Items</Text>
-              {memberItems.map((item, index) => (
-                <View key={index} style={styles.item}>
-                  <Text>{item.name || item.title} x{item.quantity || 1}</Text>
-                  <Text>৳{item.price * (item.quantity || 1)}</Text>
-                </View>
-              ))}
-            </View>
-          ))}
+          {Object.entries(groupedItems).map(([member, memberItems]) => 
+            renderMemberItems(member, memberItems)
+          )}
         </View>
 
         {/* Delivery Details */}
@@ -195,5 +234,47 @@ const styles = StyleSheet.create({
     margin: 15,
     paddingVertical: 12,
     borderRadius: 8,
+  },
+  itemHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  itemName: {
+    fontSize: 16,
+    flex: 1,
+  },
+  itemQuantity: {
+    fontSize: 16,
+    color: '#666',
+    marginLeft: 8,
+  },
+  optionsContainer: {
+    marginTop: 4,
+    marginLeft: 8,
+  },
+  optionText: {
+    fontSize: 14,
+    color: '#666',
+    fontStyle: 'italic',
+  },
+  itemTotal: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#4CAF50',
+    textAlign: 'right',
+    marginTop: 4,
+  },
+  memberTotal: {
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    marginTop: 8,
+    paddingTop: 8,
+  },
+  memberTotalText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'right',
+    color: '#4CAF50',
   },
 });

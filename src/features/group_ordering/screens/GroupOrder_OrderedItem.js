@@ -6,6 +6,58 @@ import LottieView from 'lottie-react-native';
 export default function GroupOrder_OrderedItem({ route }) {
   const { orderData } = route.params;
 
+  const calculateItemTotal = (item) => {
+    const basePrice = item.price || 0;
+    const quantity = item.quantity || 1;
+    let optionsTotal = 0;
+
+    if (item.selectedOptions) {
+      optionsTotal = Object.entries(item.selectedOptions)
+        .reduce((sum, [_, option]) => sum + (option.price || 0), 0);
+    }
+
+    return (basePrice + optionsTotal) * quantity;
+  };
+
+  const renderItems = () => {
+    // Group items by member
+    const groupedItems = orderData.items.reduce((acc, item) => {
+      const member = item.addedBy;
+      if (!acc[member]) acc[member] = [];
+      acc[member].push(item);
+      return acc;
+    }, {});
+
+    return Object.entries(groupedItems).map(([member, items]) => (
+      <View key={member} style={styles.memberSection}>
+        <Text style={styles.memberName}>{member}'s Items</Text>
+        {items.map((item, index) => (
+          <View key={index} style={styles.orderItem}>
+            <View style={styles.itemHeader}>
+              <Text style={styles.itemName}>{item.name}</Text>
+              <Text style={styles.quantity}>x{item.quantity || 1}</Text>
+            </View>
+            
+            {item.selectedOptions && Object.entries(item.selectedOptions).map(([category, option]) => (
+              <Text key={category} style={styles.optionText}>
+                {category}: {option.name} (+৳{option.price})
+              </Text>
+            ))}
+            
+            <View style={styles.itemPrice}>
+              <Text style={styles.priceText}>৳{calculateItemTotal(item)}</Text>
+            </View>
+          </View>
+        ))}
+        <View style={styles.subtotalSection}>
+          <Text style={styles.subtotalText}>
+            Subtotal: ৳{items.reduce((sum, item) => sum + calculateItemTotal(item), 0)}
+          </Text>
+        </View>
+      </View>
+    ));
+  };
+
   return (
     <View style={styles.container}>
       <LottieView
@@ -16,28 +68,23 @@ export default function GroupOrder_OrderedItem({ route }) {
       />
       
       <Text style={styles.title}>Group Order Placed!</Text>
-      <Text style={styles.subtitle}>Order #{orderData.id}</Text>
+      <Text style={styles.subtitle}>Order #{orderData.id?.slice(-6)}</Text>
 
       <ScrollView style={styles.content}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Order Details</Text>
-          {orderData.items.map((item, index) => (
-            <View key={index} style={styles.orderItem}>
-              <Text>{item.title} x{item.quantity}</Text>
-              <Text>৳{item.price * item.quantity}</Text>
-            </View>
-          ))}
+          {renderItems()}
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Delivery Details</Text>
           <Text style={styles.deliveryText}>
-            Address: {orderData.delivery.address}
+            Address: {orderData.delivery?.address}
           </Text>
           <Text style={styles.deliveryText}>
-            Phone: {orderData.delivery.phone}
+            Phone: {orderData.delivery?.phone}
           </Text>
-          {orderData.delivery.notes && (
+          {orderData.delivery?.notes && (
             <Text style={styles.deliveryText}>
               Notes: {orderData.delivery.notes}
             </Text>
@@ -81,39 +128,105 @@ const styles = StyleSheet.create({
     padding: 15,
     marginTop: 20,
   },
+  orderItem: {
+    backgroundColor: '#fff',
+    padding: 15,
+    marginBottom: 10,
+    borderRadius: 8,
+    elevation: 2,
+  },
+  itemHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  itemName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    flex: 1,
+  },
+  quantity: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginLeft: 10,
+  },
+  optionText: {
+    fontSize: 14,
+    color: '#666',
+    marginLeft: 10,
+    marginTop: 2,
+  },
+  itemPrice: {
+    marginTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    paddingTop: 8,
+  },
+  priceText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#4CAF50',
+    textAlign: 'right',
+  },
   section: {
-    marginBottom: 20,
+    backgroundColor: '#fff',
+    padding: 15,
+    marginBottom: 15,
+    borderRadius: 10,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  orderItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
+    marginBottom: 15,
+    color: '#333',
   },
   deliveryText: {
-    fontSize: 16,
-    marginBottom: 5,
+    fontSize: 15,
+    marginBottom: 8,
+    color: '#444',
   },
   totalSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 20,
-    paddingTop: 15,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 20,
   },
   totalText: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#333',
   },
   totalAmount: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: '#4CAF50',
+  },
+  memberSection: {
+    marginBottom: 20,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+  },
+  memberName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#4CAF50',
+    marginBottom: 10,
+  },
+  subtotalSection: {
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    marginTop: 10,
+    paddingTop: 10,
+  },
+  subtotalText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'right',
     color: '#4CAF50',
   },
 });

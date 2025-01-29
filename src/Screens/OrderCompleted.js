@@ -4,7 +4,7 @@ import LottieView from "lottie-react-native";
 import OrderItem from "../Components/RestaurantDetail/OrderItem";
 
 export default function OrderCompleted({ route }) {
-  const { orderData } = route.params;
+  const { orderData, orderId } = route.params;
   const {
     items,
     restaurantName,
@@ -29,6 +29,7 @@ export default function OrderCompleted({ route }) {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Order Details</Text>
           <Text style={styles.orderNumber}>Order #{orderNumber}</Text>
+          <Text style={styles.orderNumber}>Order ID: {orderId}</Text>
           <Text style={styles.timestamp}>{orderDate}</Text>
           <Text style={styles.restaurant}>{restaurantName}</Text>
         </View>

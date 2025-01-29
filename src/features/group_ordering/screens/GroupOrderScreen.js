@@ -85,8 +85,21 @@ export default function GroupOrderScreen({ navigation }) {
     }, {});
   }, [groupCart]);
 
+  const calculateItemTotal = (item) => {
+    const basePrice = item.price || 0;
+    const quantity = item.quantity || 1;
+    let optionsTotal = 0;
+
+    if (item.selectedOptions) {
+      optionsTotal = Object.entries(item.selectedOptions)
+        .reduce((sum, [_, option]) => sum + (option.price || 0), 0);
+    }
+
+    return (basePrice + optionsTotal) * quantity;
+  };
+
   const calculateMemberTotal = (items) => {
-    return items.reduce((total, item) => total + (item.finalPrice || item.price), 0);
+    return items.reduce((total, item) => total + calculateItemTotal(item), 0);
   };
 
   const getTotalAmount = () => {
@@ -98,6 +111,18 @@ export default function GroupOrderScreen({ navigation }) {
     return groupOrder.creatorName || groupOrder.creator || 'Unknown';
   };
 
+  const renderMemberSection = (member, items) => (
+    <View key={member} style={styles.memberSection}>
+      <View style={styles.memberHeader}>
+        <Text style={styles.memberOrderTitle}>{member}'s Order</Text>
+        <Text style={styles.memberTotal}>৳{calculateMemberTotal(items)}</Text>
+      </View>
+      {items.map((item, index) => (
+        <GroupOrderItem key={`${item.id}-${index}`} item={item} />
+      ))}
+    </View>
+  );
+
   if (!groupOrder) {
     return (
       <View style={styles.emptyContainer}>
@@ -108,8 +133,9 @@ export default function GroupOrderScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      {/* Header */}
       <LinearGradient
-        colors={colors.gradient.primary}
+        colors={['#171a29', '#2c3a61']}
         style={styles.header}
       >
         <Text style={styles.headerTitle}>Group Order</Text>
@@ -144,14 +170,19 @@ export default function GroupOrderScreen({ navigation }) {
       {/* Members List */}
       <View style={styles.membersSection}>
         <Text style={styles.sectionTitle}>Group Members</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.membersList}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false} 
+          style={styles.membersList}
+          contentContainerStyle={styles.membersListContent}
+        >
           {members.map((member, index) => (
             <View key={index} style={styles.memberChip}>
               <Icon 
                 name={member === groupOrder?.creator ? "crown" : "user"}
                 type="font-awesome-5"
                 size={14}
-                color={member === groupOrder?.creator ? "#FFD700" : "#666"}
+                color={member === groupOrder?.creator ? "#ffd700" : "#666"}
                 style={styles.memberIcon}
               />
               <Text style={styles.memberName}>{member}</Text>
@@ -165,17 +196,12 @@ export default function GroupOrderScreen({ navigation }) {
       {/* Order Items Section */}
       <Text style={styles.sectionTitle}>Order Items</Text>
       <ScrollView style={styles.itemsContainer}>
-        {Object.entries(groupedItems).map(([member, items]) => (
-          <View key={member} style={styles.memberSection}>
-            <View style={styles.memberHeader}>
-              <Text style={styles.memberOrderTitle}>{member}'s Order</Text>
-              <Text style={styles.memberTotal}>৳{calculateMemberTotal(items)}</Text>
-            </View>
-            {items.map((item, index) => (
-              <GroupOrderItem key={index} item={item} />
-            ))}
-          </View>
-        ))}
+        {Object.entries(groupedItems).map(([member, items]) => 
+          renderMemberSection(member, items)
+        )}
+        {Object.keys(groupedItems).length === 0 && (
+          <Text style={styles.emptyText}>No items in the group order yet</Text>
+        )}
       </ScrollView>
 
       {/* Bottom Actions */}
@@ -235,35 +261,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f8f8',
   },
   header: {
-    padding: 20,
-    paddingTop: 40,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    padding: 24,
+    paddingTop: 48,
   },
   headerTitle: {
-    color: colors.text.light,
-    fontSize: 28,
-    fontWeight: 'bold',
+    color: '#ffffff',
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: 4,
   },
   groupInfo: {
-    color: colors.text.light,
-    fontSize: 16,
-    marginTop: 5,
+    color: '#ffffff',
     opacity: 0.9,
+    fontSize: 14,
   },
   summaryContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 20,
-    backgroundColor: colors.background,
-    marginTop: -30,
-    marginHorizontal: 15,
-    borderRadius: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    backgroundColor: '#ffffff',
+    marginTop: -20,
+    marginHorizontal: 16,
+    borderRadius: 8,
+    padding: 16,
+    elevation: 4,
   },
   summaryCard: {
     alignItems: 'center',
@@ -285,29 +304,29 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    padding: 15,
+    padding: 5,
+    paddingLeft: 16,
     color: '#333',
   },
   membersSection: {
-    backgroundColor: 'white',
-    paddingVertical: 10,
+    backgroundColor: '#ffffff',
+    marginTop: 16,
+    paddingVertical: 16,
   },
   membersList: {
     paddingHorizontal: 15,
   },
+  membersListContent: {
+    paddingHorizontal: 16,
+  },
   memberChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.surface,
-    paddingHorizontal: 15,
+    backgroundColor: '#f2f2f2',
+    paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    marginRight: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    marginRight: 12,
   },
   memberIcon: {
     marginRight: 5,
@@ -327,22 +346,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
+    paddingHorizontal: 4,
   },
   memberOrderTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#4CAF50',
   },
   memberTotal: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
+    color: '#4CAF50',
   },
   bottomActions: {
-    padding: 15,
-    backgroundColor: 'white',
+    padding: 16,
+    backgroundColor: '#ffffff',
     borderTopWidth: 1,
-    borderTopColor: '#eee',
+    borderTopColor: '#f2f2f2',
   },
   addMoreButton: {
     backgroundColor: '#4CAF50',
@@ -462,5 +483,11 @@ const styles = StyleSheet.create({
   addMoreButton: {
     backgroundColor: '#4CAF50',
     marginBottom: 10,
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#666',
+    marginTop: 20,
+    fontSize: 16,
   },
 });

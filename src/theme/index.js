@@ -7,14 +7,14 @@ export const SPACING = {
 };
 
 export const COLORS = {
-  primary: '#D70F64', // Foodpanda pink
+  primary: '#fc8019',
   secondary: '#474747',
-  background: '#FFFFFF',
-  surface: '#F8F8F8',
+  background: '#f1f1f6',
+  surface: '#ffffff',
   text: {
-    primary: '#333333',
-    secondary: '#666666',
-    light: '#FFFFFF'
+    primary: '#282c3f',
+    secondary: '#686b78',
+    light: '#ffffff'
   },
   card: {
     background: '#FFFFFF',

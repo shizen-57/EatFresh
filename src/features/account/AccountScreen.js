@@ -11,19 +11,29 @@ import {
   Alert
 } from "react-native";
 import { auth, db, storage } from "../../../firebase";
-import { collection, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
+import { collection, query, where, getDocs, updateDoc, doc, orderBy } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import * as ImagePicker from 'expo-image-picker';
 import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
+const SWIGGY_COLORS = {
+  primary: '#fc8019',
+  secondary: '#ffa700',
+  background: '#ffffff',
+  text: '#3d4152'
+};
+
 export default function AccountScreen({ navigation }) {
   const [user, setUser] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [uploading, setUploading] = useState(false);
+  const [singleOrders, setSingleOrders] = useState([]);
+  const [cateringOrders, setCateringOrders] = useState([]);
+  const [groupOrders, setGroupOrders] = useState([]);
+  const [activeTab, setActiveTab] = useState('single');
 
   useEffect(() => {
     (async () => {
@@ -39,6 +49,7 @@ export default function AccountScreen({ navigation }) {
       if (user) {
         setUser(user);
         fetchUserInfo(user.uid);
+        fetchAllOrders(user.uid);
       } else {
         setUser(null);
         setUserInfo(null);
@@ -69,55 +80,118 @@ export default function AccountScreen({ navigation }) {
     }
   };
 
-  const pickImage = async () => {
+  const fetchAllOrders = async (uid) => {
     try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.5,
-      });
-
-      if (!result.canceled) {
-        setUploading(true);
-        const uploadUrl = await uploadImageAsync(result.uri);
-        await updateUserProfile(uploadUrl);
-        setUploading(false);
-      }
+      await Promise.all([
+        fetchSingleOrders(uid),
+        fetchCateringOrders(uid),
+        fetchGroupOrders(uid)
+      ]);
     } catch (error) {
-      console.error(error);
-      Alert.alert("Error", "Failed to update profile picture");
-      setUploading(false);
+      console.error("Error fetching orders:", error);
     }
   };
 
-  const uploadImageAsync = async (uri) => {
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = () => {
-        resolve(xhr.response);
-      };
-      xhr.onerror = (e) => {
-        reject(new TypeError('Network request failed'));
-      };
-      xhr.responseType = 'blob';
-      xhr.open('GET', uri, true);
-      xhr.send(null);
-    });
-
-    const fileRef = ref(storage, `profilePics/${user.uid}`);
-    await uploadBytes(fileRef, blob);
-    blob.close();
-
-    return await getDownloadURL(fileRef);
+  const fetchSingleOrders = async (uid) => {
+    try {
+      const ordersRef = collection(db, "orders");
+      const q = query(
+        ordersRef,
+        where("userId", "==", uid),
+        orderBy("createdAt", "desc")
+      );
+      
+      try {
+        const snapshot = await getDocs(q);
+        const orders = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate() || new Date()
+        }));
+        setSingleOrders(orders);
+      } catch (indexError) {
+        // Fallback query without ordering while index is being created
+        const simpleQuery = query(ordersRef, where("userId", "==", uid));
+        const snapshot = await getDocs(simpleQuery);
+        const orders = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate() || new Date()
+        }));
+        setSingleOrders(orders);
+      }
+    } catch (error) {
+      console.error("Error fetching single orders:", error);
+      setSingleOrders([]);
+    }
   };
 
-  const updateUserProfile = async (imageUrl) => {
-    const userRef = doc(db, "users", user.uid);
-    await updateDoc(userRef, {
-      profilePicture: imageUrl
-    });
-    fetchUserInfo(user.uid);
+  const fetchCateringOrders = async (uid) => {
+    try {
+      const ordersRef = collection(db, "cateringOrders");
+      const q = query(
+        ordersRef,
+        where("userId", "==", uid),
+        orderBy("createdAt", "desc")
+      );
+      
+      try {
+        const snapshot = await getDocs(q);
+        const orders = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate() || new Date()
+        }));
+        setCateringOrders(orders);
+      } catch (indexError) {
+        // Fallback query without ordering while index is being created
+        const simpleQuery = query(ordersRef, where("userId", "==", uid));
+        const snapshot = await getDocs(simpleQuery);
+        const orders = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate() || new Date()
+        }));
+        setCateringOrders(orders);
+      }
+    } catch (error) {
+      console.error("Error fetching catering orders:", error);
+      setCateringOrders([]);
+    }
+  };
+
+  const fetchGroupOrders = async (uid) => {
+    try {
+      const ordersRef = collection(db, "groupOrders_completed");
+      const q = query(
+        ordersRef,
+        where("userId", "==", uid),
+        orderBy("createdAt", "desc")
+      );
+      
+      try {
+        const snapshot = await getDocs(q);
+        const orders = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate() || new Date()
+        }));
+        setGroupOrders(orders);
+      } catch (indexError) {
+        // Fallback query without ordering while index is being created
+        const simpleQuery = query(ordersRef, where("userId", "==", uid));
+        const snapshot = await getDocs(simpleQuery);
+        const orders = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          createdAt: doc.data().createdAt?.toDate() || new Date()
+        }));
+        setGroupOrders(orders);
+      }
+    } catch (error) {
+      console.error("Error fetching group orders:", error);
+      setGroupOrders([]);
+    }
   };
 
   const handleLogout = async () => {
@@ -127,6 +201,38 @@ export default function AccountScreen({ navigation }) {
     } catch (error) {
       console.error('Logout error:', error);
     }
+  };
+
+  const renderOrderItem = (order, type) => {
+    if (!order) return null;
+    
+    return (
+      <View style={styles.orderCard} key={order.id}>
+        <View style={styles.orderHeader}>
+          <Text style={styles.orderType}>{type}</Text>
+          <Text style={styles.orderDate}>
+            {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'No date'}
+          </Text>
+        </View>
+        <View style={styles.orderDetails}>
+          <Text style={styles.orderTotal}>
+            Total: ${order.total ? order.total.toFixed(2) : '0.00'}
+          </Text>
+          <Text style={styles.orderStatus}>
+            Status: {order.status || 'Unknown'}
+          </Text>
+        </View>
+        {order.items && Array.isArray(order.items) && (
+          <View style={styles.itemsList}>
+            {order.items.map((item, index) => (
+              <Text key={index} style={styles.itemText}>
+                • {item.quantity || 1}x {item.name || 'Unknown Item'}
+              </Text>
+            ))}
+          </View>
+        )}
+      </View>
+    );
   };
 
   if (!user) {
@@ -148,25 +254,10 @@ export default function AccountScreen({ navigation }) {
   return (
     <ScrollView style={styles.container}>
       <LinearGradient
-        colors={['#FF6B6B', '#FFE66D']}
+        colors={[SWIGGY_COLORS.primary, SWIGGY_COLORS.secondary]}
         style={styles.headerContainer}
       >
         <View style={styles.profileContainer}>
-          <TouchableOpacity onPress={pickImage} style={styles.profileImageContainer}>
-            {uploading ? (
-              <ActivityIndicator size="small" color="#fff" />
-            ) : (
-              <>
-                <Image
-                  source={userInfo?.profilePicture ? { uri: userInfo.profilePicture } : require('../../../assets/logo.png')}
-                  style={styles.profileImage}
-                />
-                <View style={styles.editIconContainer}>
-                  <MaterialIcons name="edit" size={20} color="#fff" />
-                </View>
-              </>
-            )}
-          </TouchableOpacity>
           <Text style={styles.userName}>{userInfo?.name || 'User'}</Text>
           <Text style={styles.userEmail}>{user.email}</Text>
         </View>
@@ -174,7 +265,7 @@ export default function AccountScreen({ navigation }) {
 
       <View style={styles.infoSection}>
         <View style={styles.infoCard}>
-          <MaterialIcons name="person" size={24} color="#FF6B6B" style={styles.icon} />
+          <MaterialIcons name="person" size={24} color={SWIGGY_COLORS.primary} style={styles.icon} />
           <View style={styles.infoContent}>
             <Text style={styles.infoLabel}>Name</Text>
             <Text style={styles.infoValue}>{userInfo?.name || 'Not set'}</Text>
@@ -182,7 +273,7 @@ export default function AccountScreen({ navigation }) {
         </View>
 
         <View style={styles.infoCard}>
-          <MaterialIcons name="phone" size={24} color="#FF6B6B" style={styles.icon} />
+          <MaterialIcons name="phone" size={24} color={SWIGGY_COLORS.primary} style={styles.icon} />
           <View style={styles.infoContent}>
             <Text style={styles.infoLabel}>Phone</Text>
             <Text style={styles.infoValue}>{userInfo?.phone || 'Not set'}</Text>
@@ -195,6 +286,42 @@ export default function AccountScreen({ navigation }) {
             <Text style={styles.infoLabel}>Location</Text>
             <Text style={styles.infoValue}>{userInfo?.location || 'Not set'}</Text>
           </View>
+        </View>
+      </View>
+
+      <View style={styles.orderSection}>
+        <Text style={styles.sectionTitle}>Order History</Text>
+        <View style={styles.tabContainer}>
+          <TouchableOpacity 
+            style={[styles.tab, activeTab === 'single' && styles.activeTab]}
+            onPress={() => setActiveTab('single')}
+          >
+            <Text style={[styles.tabText, activeTab === 'single' && styles.activeTabText]}>
+              Single Orders
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.tab, activeTab === 'catering' && styles.activeTab]}
+            onPress={() => setActiveTab('catering')}
+          >
+            <Text style={[styles.tabText, activeTab === 'catering' && styles.activeTabText]}>
+              Catering Orders
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.tab, activeTab === 'group' && styles.activeTab]}
+            onPress={() => setActiveTab('group')}
+          >
+            <Text style={[styles.tabText, activeTab === 'group' && styles.activeTabText]}>
+              Group Orders
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.orderList}>
+          {activeTab === 'single' && singleOrders.map(order => renderOrderItem(order, 'Single Order'))}
+          {activeTab === 'catering' && cateringOrders.map(order => renderOrderItem(order, 'Catering Order'))}
+          {activeTab === 'group' && groupOrders.map(order => renderOrderItem(order, 'Group Order'))}
         </View>
       </View>
 
@@ -212,37 +339,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f9fa',
   },
   headerContainer: {
-    paddingVertical: 30,
+    paddingVertical: 20, // Reduced padding since we removed the profile image
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
   },
   profileContainer: {
     alignItems: 'center',
-    paddingVertical: 20,
-  },
-  profileImageContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 15,
-    elevation: 5,
-  },
-  profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-  },
-  editIconContainer: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    backgroundColor: '#FF6B6B',
-    padding: 8,
-    borderRadius: 20,
-    elevation: 5,
+    paddingVertical: 15,
   },
   userName: {
     fontSize: 24,
@@ -283,9 +386,90 @@ const styles = StyleSheet.create({
     color: '#333',
     fontWeight: '500',
   },
+  orderSection: {
+    padding: 20,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    color: '#333',
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    marginBottom: 15,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 10,
+    padding: 5,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 8,
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  activeTab: {
+    backgroundColor: SWIGGY_COLORS.primary,
+  },
+  tabText: {
+    fontSize: 14,
+    color: '#666',
+  },
+  activeTabText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  orderList: {
+    marginTop: 10,
+  },
+  orderCard: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
+    elevation: 2,
+  },
+  orderHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  orderType: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FF6B6B',
+  },
+  orderDate: {
+    fontSize: 14,
+    color: '#666',
+  },
+  orderDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  orderTotal: {
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  orderStatus: {
+    fontSize: 15,
+    color: '#4CAF50',
+  },
+  itemsList: {
+    marginTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    paddingTop: 10,
+  },
+  itemText: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 5,
+  },
   logoutButton: {
     flexDirection: 'row',
-    backgroundColor: '#FF6B6B',
+    backgroundColor: SWIGGY_COLORS.primary,
     marginHorizontal: 20,
     marginBottom: 30,
     padding: 15,

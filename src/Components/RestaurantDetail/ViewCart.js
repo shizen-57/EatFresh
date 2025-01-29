@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Modal, StyleSheet, ScrollView, TextInput 
 import { useCart } from "../../context/CartContext";
 import OrderItem from "./OrderItem";
 import { db } from "../../../firebase";
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useGroupOrder } from '../../features/group_ordering/context/GroupOrderContext';
 
 export default function ViewCart({ navigation }) {
@@ -59,7 +59,7 @@ export default function ViewCart({ navigation }) {
         restaurantName,
         total,
         status: "pending",
-        createdAt: new Date().toISOString(),
+        createdAt: serverTimestamp(),
         orderNumber: Math.floor(Math.random() * 100000).toString(),
         userDetails: {
           ...userDetails,
@@ -67,15 +67,30 @@ export default function ViewCart({ navigation }) {
         }
       };
 
+      // Save to orders collection in Firestore
       const ordersRef = collection(db, "orders");
       const docRef = await addDoc(ordersRef, orderData);
+
+      // Also save to user's orders subcollection if you have user authentication
+      if (auth.currentUser) {
+        const userOrdersRef = collection(db, `users/${auth.currentUser.uid}/orders`);
+        await addDoc(userOrdersRef, {
+          orderId: docRef.id,
+          ...orderData
+        });
+      }
       
       setLoading(false);
       setModalVisible(false);
       clearCart();
+      
+      // Navigate with order ID
       navigation.navigate("OrderCompleted", { 
         orderId: docRef.id,
-        orderData 
+        orderData: {
+          ...orderData,
+          id: docRef.id
+        }
       });
     } catch (error) {
       console.error("Error adding order: ", error);

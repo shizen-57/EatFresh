@@ -1,14 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { useCart } from "../../context/CartContext";
+import { View, Text, StyleSheet } from "react-native";
 
-export default function OrderItem({ item, restaurantId }) {
-  const { removeFromCart, updateItemQuantity } = useCart();
+export default function OrderItem({ item }) {
   const { 
-    id,
     name, 
     selectedOptions, 
-    itemTotalPrice,
+    finalPrice,
     quantity = 1 
   } = item;
 
@@ -25,31 +22,15 @@ export default function OrderItem({ item, restaurantId }) {
   return (
     <View style={styles.container}>
       <View style={styles.mainInfo}>
-        <Text style={styles.name}>{name}</Text>
+        <View style={styles.nameContainer}>
+          <Text style={styles.name}>{name}</Text>
+          {quantity > 1 && (
+            <Text style={styles.quantityBadge}>×{quantity}</Text>
+          )}
+        </View>
         {renderCustomizations()}
       </View>
-      <Text style={styles.price}>৳{itemTotalPrice.toFixed(2)}</Text>
-      <View style={styles.quantityContainer}>
-        <TouchableOpacity 
-          style={styles.quantityButton}
-          onPress={() => updateItemQuantity(restaurantId, id, -1, selectedOptions)}
-        >
-          <Text style={styles.quantityButtonText}>-</Text>
-        </TouchableOpacity>
-        <Text style={styles.quantity}>{quantity}</Text>
-        <TouchableOpacity 
-          style={styles.quantityButton}
-          onPress={() => updateItemQuantity(restaurantId, id, 1, selectedOptions)}
-        >
-          <Text style={styles.quantityButtonText}>+</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={styles.removeButton}
-          onPress={() => removeFromCart(restaurantId, id)}
-        >
-          <Text style={styles.removeButtonText}>Remove</Text>
-        </TouchableOpacity>
-      </View>
+      <Text style={styles.price}>৳{finalPrice?.toFixed(2)}</Text>
     </View>
   );
 }
@@ -66,10 +47,21 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 10,
   },
+  nameContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
   name: {
     fontWeight: "600",
     fontSize: 16,
     marginBottom: 4,
+  },
+  quantityBadge: {
+    marginLeft: 8,
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '500',
   },
   customization: {
     color: "gray",
@@ -79,32 +71,5 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 16,
     fontWeight: "600",
-  },
-  quantityContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  quantityButton: {
-    padding: 8,
-    backgroundColor: '#eee',
-    borderRadius: 4,
-  },
-  quantityButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  quantity: {
-    paddingHorizontal: 15,
-    fontSize: 16,
-  },
-  removeButton: {
-    marginLeft: 'auto',
-    padding: 8,
-    backgroundColor: '#ff4444',
-    borderRadius: 4,
-  },
-  removeButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
   },
 });

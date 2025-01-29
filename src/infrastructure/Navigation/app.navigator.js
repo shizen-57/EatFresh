@@ -21,6 +21,12 @@ import JoinGroupScreen from "../../features/group_ordering/screens/JoinGroupScre
 import GroupOrderScreen from "../../features/group_ordering/screens/GroupOrderScreen";
 import ScanQRCodeScreen from "../../features/group_ordering/screens/ScanQRCodeScreen";
 import SearchResults from "../../Screens/SearchResults";
+import CateringMenuScreen from '../../features/catering/screens/CateringMenuScreen';
+import CateringDetailScreen from '../../features/catering/screens/CateringDetailScreen';
+import CateringCartScreen from '../../features/catering/screens/CateringCartScreen';
+import CateringOrderConfirmation from '../../features/catering/screens/CateringOrderConfirmation';
+import GroupCartCheckout from '../../features/group_ordering/screens/GroupCartCheckout';
+import GroupOrder_OrderedItem from '../../features/group_ordering/screens/GroupOrder_OrderedItem';
 
 export default function RootNavigation() {
   const Stack = createStackNavigator();
@@ -32,7 +38,7 @@ export default function RootNavigation() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeScreen" screenOptions={screenOptions}>
+      <Stack.Navigator initialRouteName="Login" screenOptions={screenOptions}>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignupNext" component={SignupNextScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
@@ -105,7 +111,56 @@ export default function RootNavigation() {
             title: "Scan QR Code"
           }}
         />
+        <Stack.Screen 
+          name="CateringMenuScreen" 
+          component={CateringMenuScreen}
+          options={{
+            headerShown: true,
+            title: 'Catering Menu'
+          }}
+        />
+        <Stack.Screen 
+          name="CateringDetail" 
+          component={CateringDetailScreen}
+          options={{
+            headerShown: true,
+            title: 'Catering Details'
+          }}
+        />
+        <Stack.Screen 
+          name="CateringCart" 
+          component={CateringCartScreen}
+          options={{
+            headerShown: true,
+            title: 'Catering Cart'
+          }}
+        />
+        <Stack.Screen 
+          name="CateringOrderConfirmation" 
+          component={CateringOrderConfirmation}
+          options={{
+            headerShown: true,
+            title: 'Order Confirmation'
+          }}
+        />
         <Stack.Screen name="SearchResults" component={SearchResults} />
+        
+        <Stack.Screen 
+          name="GroupCartCheckout"
+          component={GroupCartCheckout}
+          options={{
+            headerShown: true,
+            title: "Group Order Checkout"
+          }}
+        />
+        <Stack.Screen 
+          name="GroupOrder_OrderedItem"
+          component={GroupOrder_OrderedItem}
+          options={{
+            headerShown: true,
+            title: "Order Confirmation"
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
