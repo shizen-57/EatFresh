@@ -5,7 +5,7 @@ import MapView, { Marker, Callout, Polyline, PROVIDER_DEFAULT } from "react-nati
 import * as Location from 'expo-location';
 import { realtimeDb, ref, onValue } from "../../../firebase";
 import RestaurantPreview from "./components/RestaurantPreview";
-import SearchBar from "../../Components/home/SearchBar";
+import MapSearchBar from "./components/MapSearchBar";
 import { MaterialIcons } from '@expo/vector-icons';
 import RestaurantMarker from "./components/RestaurantMarker";
 
@@ -29,7 +29,6 @@ export default function MapScreen() {
   const [restaurants, setRestaurants] = useState([]);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [route, setRoute] = useState(null);
-  const [allRestaurants, setAllRestaurants] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [region, setRegion] = useState(INITIAL_REGION);
 
@@ -77,31 +76,35 @@ export default function MapScreen() {
       }
     });
 
-    onValue(restaurantsRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const restaurantsData = snapshot.val();
-        
-        // Get locations data
-        onValue(locationsRef, (locationSnapshot) => {
-          if (locationSnapshot.exists()) {
-            const locationsData = locationSnapshot.val();
-            
-            // Combine restaurant and location data
-            const restaurantList = Object.entries(restaurantsData).map(([id, restaurant]) => ({
-              id,
-              ...restaurant,
-              location: {
-                ...locationsData[restaurant.location],
-                latitude: parseFloat(locationsData[restaurant.location].latitude),
-                longitude: parseFloat(locationsData[restaurant.location].longitude)
-              }
-            }));
-            
-            setRestaurants(restaurantList);
-          }
-        });
-      }
-    });
+    const fetchRestaurants = () => {
+      onValue(restaurantsRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const restaurantsData = snapshot.val();
+          
+          // Get locations data
+          onValue(locationsRef, (locationSnapshot) => {
+            if (locationSnapshot.exists()) {
+              const locationsData = locationSnapshot.val();
+              
+              // Combine restaurant and location data
+              const restaurantList = Object.entries(restaurantsData).map(([id, restaurant]) => ({
+                id,
+                ...restaurant,
+                location: {
+                  ...locationsData[restaurant.location],
+                  latitude: parseFloat(locationsData[restaurant.location].latitude),
+                  longitude: parseFloat(locationsData[restaurant.location].longitude)
+                }
+              }));
+              
+              setRestaurants(restaurantList);
+            }
+          });
+        }
+      });
+    };
+
+    fetchRestaurants();
 
     return () => {
       isMounted = false;
@@ -173,6 +176,9 @@ export default function MapScreen() {
         longitudeDelta: LONGITUDE_DELTA,
       };
       mapRef.current?.animateToRegion(searchRegion, 1000);
+    } else {
+      // Reset to show all restaurants
+      fetchRestaurants();
     }
   };
 
@@ -212,7 +218,7 @@ export default function MapScreen() {
         )}
       </MapView>
 
-      <SearchBar cityHandler={handleSearch} style={styles.searchBar} />
+      <MapSearchBar onSearch={handleSearch} style={styles.searchBar} />
 
       <TouchableOpacity 
         style={[

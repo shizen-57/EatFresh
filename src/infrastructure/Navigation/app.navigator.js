@@ -20,8 +20,7 @@ import CreateGroupScreen from "../../features/group_ordering/screens/CreateGroup
 import JoinGroupScreen from "../../features/group_ordering/screens/JoinGroupScreen";
 import GroupOrderScreen from "../../features/group_ordering/screens/GroupOrderScreen";
 import ScanQRCodeScreen from "../../features/group_ordering/screens/ScanQRCodeScreen";
-import GroupCartCheckout from "../../features/group_ordering/screens/GroupCartCheckout";
-import GroupOrder_OrderedItem from "../../features/group_ordering/screens/GroupOrder_OrderedItem";
+import SearchResults from "../../Screens/SearchResults";
 
 export default function RootNavigation() {
   const Stack = createStackNavigator();
@@ -106,22 +105,7 @@ export default function RootNavigation() {
             title: "Scan QR Code"
           }}
         />
-        <Stack.Screen 
-          name="GroupCartCheckout" 
-          component={GroupCartCheckout}
-          options={{
-            headerShown: true,
-            title: "Group Order Checkout"
-          }}
-        />
-        <Stack.Screen 
-          name="GroupOrder_OrderedItem" 
-          component={GroupOrder_OrderedItem}
-          options={{
-            headerShown: true,
-            title: "Order Confirmation"
-          }}
-        />
+        <Stack.Screen name="SearchResults" component={SearchResults} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -6,6 +6,8 @@ import { useGroupOrder } from '../context/GroupOrderContext';
 import GroupOrderSummary from '../Components/GroupOrderSummary';
 import GroupOrderItem from '../Components/GroupOrderItem';
 import QRCodeGenerator from '../Components/QRCodeGenerator';
+import { LinearGradient } from 'expo-linear-gradient';
+import { colors } from '../../../theme/colors';
 
 export default function GroupOrderScreen({ navigation }) {
   const { 
@@ -106,13 +108,15 @@ export default function GroupOrderScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* Header Section */}
-      <View style={styles.header}>
+      <LinearGradient
+        colors={colors.gradient.primary}
+        style={styles.header}
+      >
         <Text style={styles.headerTitle}>Group Order</Text>
         <Text style={styles.groupInfo}>
           Led by {getCreatorName()}
         </Text>
-      </View>
+      </LinearGradient>
 
       {/* Summary Cards */}
       <View style={styles.summaryContainer}>
@@ -231,29 +235,35 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f8f8',
   },
   header: {
-    backgroundColor: '#4CAF50',
     padding: 20,
     paddingTop: 40,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
   headerTitle: {
-    color: 'white',
-    fontSize: 24,
+    color: colors.text.light,
+    fontSize: 28,
     fontWeight: 'bold',
   },
   groupInfo: {
-    color: 'white',
+    color: colors.text.light,
     fontSize: 16,
     marginTop: 5,
+    opacity: 0.9,
   },
   summaryContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    padding: 15,
-    backgroundColor: 'white',
-    marginTop: -20,
+    padding: 20,
+    backgroundColor: colors.background,
+    marginTop: -30,
     marginHorizontal: 15,
-    borderRadius: 10,
-    elevation: 3,
+    borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   summaryCard: {
     alignItems: 'center',
@@ -288,11 +298,16 @@ const styles = StyleSheet.create({
   memberChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.surface,
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 20,
     marginRight: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   memberIcon: {
     marginRight: 5,

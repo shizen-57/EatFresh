@@ -1,8 +1,11 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function RestaurantPreview({ restaurant, route }) {
+  const navigation = useNavigation();
+
   if (!restaurant) {
     return null;
   }
@@ -30,13 +33,19 @@ export default function RestaurantPreview({ restaurant, route }) {
     });
   };
 
+  const handleNavigateToDetail = () => {
+    navigation.navigate('RestaurantDetail', { restaurant });
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <Image 
-          source={{ uri: restaurant.image_url }} 
-          style={styles.image}
-        />
+        <TouchableOpacity onPress={handleNavigateToDetail}>
+          <Image 
+            source={{ uri: restaurant.image_url }} 
+            style={styles.image}
+          />
+        </TouchableOpacity>
         <View style={styles.details}>
           <Text style={styles.name}>{restaurant.name || 'Restaurant Name'}</Text>
           

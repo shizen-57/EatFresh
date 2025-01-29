@@ -1,81 +1,103 @@
-import React, { useState, useCallback } from "react";
-import { View, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { ref, query, orderByChild, equalTo, get } from "firebase/database";
-import { realtimeDb } from "../../../firebase";
-import debounce from "lodash.debounce";
+import React, { useState, useCallback } from 'react';
+import { View, TextInput, StyleSheet, TouchableOpacity, Keyboard } from 'react-native';
+import { Feather, MaterialIcons } from '@expo/vector-icons';
+import { COLORS, SPACING } from '../../theme';
+import debounce from 'lodash.debounce';
+import { useNavigation } from '@react-navigation/native';
 
-export default function SearchBar({ cityHandler }) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(false);
+export default function SearchBar({ onSearch }) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
+  const navigation = useNavigation();
 
-  const handleSearch = useCallback(
-    debounce(async (text) => {
-      setLoading(true);
-      try {
-        const restaurantsRef = ref(realtimeDb, "restaurants");
-        let querySnapshot;
-
-        if (text.trim()) {
-          const q = query(restaurantsRef, orderByChild("location/city"), equalTo(text));
-          querySnapshot = await get(q);
-        } else {
-          querySnapshot = await get(restaurantsRef);
-          cityHandler(""); // Show all restaurants when search is empty
-          setLoading(false);
-          return;
-        }
-
-        const locations = [];
-        querySnapshot.forEach((doc) => {
-          locations.push(doc.val());
-        });
-        cityHandler(locations);
-      } catch (error) {
-        console.error("Error searching locations:", error);
-      } finally {
-        setLoading(false);
-      }
+  // Debounce search function to avoid too many API calls
+  const debouncedSearch = useCallback(
+    debounce((text) => {
+      if (onSearch) onSearch(text);
     }, 500),
     []
   );
 
-  const handleChangeText = (text) => {
-    setSearchQuery(text);
-    handleSearch(text);
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    if (onSearch) onSearch('');
+    Keyboard.dismiss();
+  };
+
+  const handleSearchPress = () => {
+    navigation.navigate('SearchResults', { query: searchQuery });
   };
 
   return (
-    <View style={{ marginTop: 15, flexDirection: "row" }}>
-      <View
-        style={{
-          backgroundColor: "transparent",
-          borderRadius: 50,
-          flexDirection: "row",
-          alignItems: "center",
-          marginRight: 10,
-          flex: 1,
-          padding: 10, // Increased padding to make the box bigger
-        }}
-      >
-        <TouchableOpacity style={{ marginLeft: 10 }}>
-          <Ionicons name="location-sharp" size={30} />
+    <View style={styles.container}>
+      <View style={[styles.searchBar, isFocused && styles.searchBarFocused]}>
+        <TouchableOpacity onPress={handleSearchPress}>
+          <Feather 
+            name="search" 
+            size={22} 
+            color={isFocused ? COLORS.primary : COLORS.text.secondary} 
+          />
         </TouchableOpacity>
+
         <TextInput
-          style={{
-            backgroundColor: "white",
-            borderRadius: 20,
-            fontWeight: "700",
-            flex: 1,
-            marginLeft: 10,
-            padding: 12, // Increased padding to make the input box bigger
-          }}
-          placeholder="Search Location"
+          style={styles.input}
+          placeholder="Search for restaurants, dishes..."
+          placeholderTextColor={COLORS.text.secondary}
           value={searchQuery}
-          onChangeText={handleChangeText}
+          onChangeText={(text) => {
+            setSearchQuery(text);
+            debouncedSearch(text);
+          }}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          returnKeyType="search"
+          onSubmitEditing={handleSearchPress}
         />
-        {loading && <ActivityIndicator size="small" color="#0000ff" style={{ marginLeft: 10 }} />}
+
+        {searchQuery.length > 0 && (
+          <TouchableOpacity 
+            onPress={handleClearSearch}
+            style={styles.clearButton}
+          >
+            <MaterialIcons 
+              name="clear" 
+              size={20} 
+              color={COLORS.text.secondary} 
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.sm,
+  },
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.surface,
+    borderRadius: 12,
+    paddingHorizontal: SPACING.md,
+    height: 48,
+    flex: 1,
+  },
+  searchBarFocused: {
+    borderColor: COLORS.primary,
+    borderWidth: 1,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: COLORS.text.primary,
+    marginLeft: SPACING.sm,
+  },
+  clearButton: {
+    marginLeft: SPACING.sm,
+  },
+});
