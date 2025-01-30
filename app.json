@@ -1,50 +1,38 @@
 {
   "expo": {
     "name": "EatFresh",
-    "slug": "EatFresh",
+    "slug": "eatfresh-v2",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logooF.jpg",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#fc8019"
+      "backgroundColor": "#ffffff"
     },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#fc8019"
+        "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
-      ],
-      "package": "com.shifu42.EatFresh"
+      "package": "com.shifu42.eatfresh_v2",
+      "versionCode": 1
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      "expo-barcode-scanner",
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
-          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
-          "recordAudioAndroid": true
-        }
-      ],
-      "expo-font"
-    ],
     "extra": {
       "eas": {
-        "projectId": "f1269b52-2481-4fca-9564-b64f159ec359"
+        "projectId": "eatfresh-v2"
       }
-    }
+    },
+    "owner": "shifu42",
+    "plugins": [
+      "expo-build-properties"
+    ]
   }
 }
