@@ -30,6 +30,7 @@ export default function AccountScreen({ navigation }) {
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const [singleOrders, setSingleOrders] = useState([]);
   const [cateringOrders, setCateringOrders] = useState([]);
   const [groupOrders, setGroupOrders] = useState([]);
@@ -194,6 +195,86 @@ export default function AccountScreen({ navigation }) {
     }
   };
 
+  const pickImage = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.5,
+      });
+
+      if (!result.canceled) {
+        setUploading(true);
+        try {
+          // Get the selected asset's URI
+          const imageUri = result.assets[0].uri;
+          console.log("Selected image URI:", imageUri); // Debug log
+          
+          // Upload the image
+          const uploadUrl = await uploadImageAsync(imageUri);
+          console.log("Uploaded image URL:", uploadUrl); // Debug log
+          
+          // Update user profile
+          await updateUserProfile(uploadUrl);
+          Alert.alert("Success", "Profile picture updated successfully!");
+        } catch (error) {
+          console.error("Error in upload process:", error);
+          Alert.alert("Error", "Failed to upload image. Please try again.");
+        } finally {
+          setUploading(false);
+        }
+      }
+    } catch (error) {
+      console.error("Error picking image:", error);
+      Alert.alert("Error", "Failed to select image");
+      setUploading(false);
+    }
+  };
+
+  const uploadImageAsync = async (uri) => {
+    try {
+      // First, create a blob from the URI
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      console.log("Created blob from image"); // Debug log
+
+      // Create a reference to the file location in Firebase Storage
+      const fileRef = ref(storage, `profilePics/${user.uid}`);
+      console.log("Created storage reference"); // Debug log
+
+      // Upload the blob
+      const uploadResult = await uploadBytes(fileRef, blob);
+      console.log("Uploaded blob to storage"); // Debug log
+
+      // Get the download URL
+      const downloadURL = await getDownloadURL(fileRef);
+      console.log("Got download URL:", downloadURL); // Debug log
+
+      return downloadURL;
+    } catch (error) {
+      console.error("Error in uploadImageAsync:", error);
+      throw error; // Re-throw to handle in pickImage
+    }
+  };
+
+  const updateUserProfile = async (imageUrl) => {
+    try {
+      // Update Firestore document
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
+        profilePicture: imageUrl
+      });
+      console.log("Updated user profile with new image URL"); // Debug log
+
+      // Refresh user info
+      await fetchUserInfo(user.uid);
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      throw error; // Re-throw to handle in pickImage
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -258,6 +339,21 @@ export default function AccountScreen({ navigation }) {
         style={styles.headerContainer}
       >
         <View style={styles.profileContainer}>
+          <TouchableOpacity onPress={pickImage} style={styles.profileImageContainer}>
+            {uploading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <>
+                <Image
+                  source={userInfo?.profilePicture ? { uri: userInfo.profilePicture } : require('../../../assets/logo.png')}
+                  style={styles.profileImage}
+                />
+                <View style={styles.editIconContainer}>
+                  <MaterialIcons name="edit" size={20} color="#fff" />
+                </View>
+              </>
+            )}
+          </TouchableOpacity>
           <Text style={styles.userName}>{userInfo?.name || 'User'}</Text>
           <Text style={styles.userEmail}>{user.email}</Text>
         </View>
@@ -339,13 +435,37 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f9fa',
   },
   headerContainer: {
-    paddingVertical: 20, // Reduced padding since we removed the profile image
+    paddingVertical: 30,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
   },
   profileContainer: {
     alignItems: 'center',
-    paddingVertical: 15,
+    paddingVertical: 20,
+  },
+  profileImageContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+    elevation: 5,
+  },
+  profileImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+  },
+  editIconContainer: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: '#FF6B6B',
+    padding: 8,
+    borderRadius: 20,
+    elevation: 5,
   },
   userName: {
     fontSize: 24,

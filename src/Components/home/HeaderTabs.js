@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import * as Location from 'expo-location';
 import { auth, db } from "../../../firebase";
 import { doc, getDoc } from "firebase/firestore";
+import SearchBar from './SearchBar';
 
 export default function HeaderTabs() {
   const [location, setLocation] = useState(null);
@@ -56,10 +56,7 @@ export default function HeaderTabs() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.searchSection}>
-        <Ionicons name="search" size={20} color="#A9A9A9" style={styles.searchIcon} />
-        <TextInput placeholder="Search for 'Biryani'" style={styles.input} />
-      </View>
+      <SearchBar containerStyle={styles.searchContainer} />
 
       <View style={styles.snaccBar}>
         <Text style={styles.snaccText}>
@@ -72,7 +69,7 @@ export default function HeaderTabs() {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: "#fc8019", // Changed from #32CD32
+    backgroundColor: "#fc8019",
     padding: 10,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
@@ -88,14 +85,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   userName: {
-    color: "#ffffff", // Changed from #fff
+    color: "#ffffff",
     fontSize: 18,
     fontWeight: "bold",
     marginLeft: 5,
     marginBottom: 5,
   },
   location: {
-    color: "#ffffff", // Changed from #fff
+    color: "#ffffff",
     fontSize: 12,
     marginLeft: 5,
   },
@@ -104,7 +101,7 @@ const styles = StyleSheet.create({
     height: 20,
   },
   profile: {
-    backgroundColor: "#ffffff", // Changed from #A9A9A9
+    backgroundColor: "#ffffff",
     borderRadius: 50,
     padding: 5,
   },
@@ -113,31 +110,20 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 16,
   },
-  searchSection: {
-    flexDirection: "row",
-    backgroundColor: "#ffffff", // Changed from #fff
-    borderRadius: 20,
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    marginBottom: 10,
-  },
-  searchIcon: {
-    color: "#686b78", // Changed from #A9A9A9
-    marginRight: 10,
-  },
-  input: {
-    flex: 1,
-    color: "#282c3f", // Changed from #000
+  searchContainer: {
+    marginVertical: 12, // Increased from 10
+    backgroundColor: 'transparent',
+    paddingHorizontal: 5, // Added padding
   },
   snaccBar: {
-    backgroundColor: "rgba(40, 44, 63, 0.9)", // Changed from #000
+    backgroundColor: "rgba(40, 44, 63, 0.9)",
     borderRadius: 10,
     padding: 5,
     alignItems: "center",
+    marginTop: 10,
   },
   snaccText: {
-    color: "#ffffff", // Changed from #fff
+    color: "#ffffff",
     fontSize: 16,
     fontWeight: "bold",
   },

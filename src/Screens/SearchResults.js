@@ -1,118 +1,159 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  FlatList, 
+  Image, 
+  TouchableOpacity,
+  ActivityIndicator
+} from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { COLORS, SPACING, TYPOGRAPHY } from '../theme';
-import { realtimeDb, ref, onValue } from '../../firebase'; // Import Firebase configuration
+import { COLORS, SPACING } from '../theme';
+import { realtimeDb, ref, onValue } from '../../firebase';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function SearchResults() {
-  const route = useRoute();
-  const navigation = useNavigation();
+export default function SearchResults({ route, navigation }) {
   const { query } = route.params;
-  const [results, setResults] = useState({ restaurants: [], menuItems: [] });
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filteredResults, setFilteredResults] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const restaurantsRef = ref(realtimeDb, 'restaurants');
-        const menuItemsRef = ref(realtimeDb, 'menuItems');
-
-        onValue(restaurantsRef, (snapshot) => {
-          if (snapshot.exists()) {
-            const restaurantsData = snapshot.val();
-            const restaurants = Object.entries(restaurantsData).map(([id, restaurant]) => ({
+  const fetchSearchResults = useCallback(async () => {
+    setLoading(true);
+    try {
+      const restaurantsRef = ref(realtimeDb, 'restaurants');
+      
+      onValue(restaurantsRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const searchResults = new Set(); // Use Set to avoid duplicates
+          
+          Object.entries(data).forEach(([id, restaurant]) => {
+            const restaurantData = {
               id,
-              ...restaurant
-            }));
+              ...restaurant,
+              matchType: 'none'
+            };
 
-            const filteredRestaurants = restaurants.filter(restaurant =>
-              restaurant.name.toLowerCase().includes(query.toLowerCase())
-            );
+            // Search in restaurant name
+            if (restaurant.name.toLowerCase().includes(query.toLowerCase())) {
+              restaurantData.matchType = 'restaurant';
+              searchResults.add(restaurantData);
+            }
 
-            setResults(prevResults => ({ ...prevResults, restaurants: filteredRestaurants }));
-          }
-        });
+            // Search in menu items
+            if (restaurant.menu) {
+              Object.values(restaurant.menu).forEach(category => {
+                category.items?.forEach(item => {
+                  if (item.name.toLowerCase().includes(query.toLowerCase())) {
+                    restaurantData.matchType = 'dish';
+                    restaurantData.matchedDish = item.name;
+                    searchResults.add(restaurantData);
+                  }
+                });
+              });
+            }
 
-        onValue(menuItemsRef, (snapshot) => {
-          if (snapshot.exists()) {
-            const menuItemsData = snapshot.val();
-            const menuItems = Object.entries(menuItemsData).map(([id, item]) => ({
-              id,
-              ...item
-            }));
+            // Search in cuisine types
+            if (restaurant.categories?.some(cat => 
+              cat.toLowerCase().includes(query.toLowerCase())
+            )) {
+              restaurantData.matchType = 'cuisine';
+              searchResults.add(restaurantData);
+            }
+          });
 
-            const filteredMenuItems = menuItems.filter(item =>
-              item.name.toLowerCase().includes(query.toLowerCase())
-            );
+          const sortedResults = Array.from(searchResults).sort((a, b) => {
+            // Prioritize exact matches
+            const aExact = a.name.toLowerCase() === query.toLowerCase();
+            const bExact = b.name.toLowerCase() === query.toLowerCase();
+            if (aExact && !bExact) return -1;
+            if (!aExact && bExact) return 1;
 
-            setResults(prevResults => ({ ...prevResults, menuItems: filteredMenuItems }));
-          }
-        });
-      } catch (error) {
-        console.error('Error fetching data from Firebase:', error);
-      }
-    };
+            // Then prioritize by match type
+            const matchPriority = { restaurant: 3, dish: 2, cuisine: 1 };
+            return matchPriority[b.matchType] - matchPriority[a.matchType];
+          });
 
-    if (query) {
-      fetchData();
+          setResults(sortedResults);
+        }
+        setLoading(false);
+      });
+    } catch (error) {
+      console.error('Search error:', error);
+      setLoading(false);
     }
   }, [query]);
 
-  const handleRestaurantPress = (restaurant) => {
-    navigation.navigate('RestaurantDetail', { restaurant });
-  };
+  useEffect(() => {
+    fetchSearchResults();
+  }, [fetchSearchResults]);
 
-  const handleMenuItemPress = (menuItem) => {
-    const restaurantRef = ref(realtimeDb, `restaurants/${menuItem.restaurantId}`);
-    onValue(restaurantRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const restaurant = snapshot.val();
-        navigation.navigate('RestaurantDetail', { restaurant: { id: menuItem.restaurantId, ...restaurant } });
-      }
-    });
-  };
+  const renderRestaurantItem = ({ item }) => (
+    <TouchableOpacity 
+      style={styles.resultCard}
+      onPress={() => navigation.navigate('RestaurantDetail', { restaurant: item })}
+    >
+      <Image 
+        source={{ uri: item.image_url }} 
+        style={styles.restaurantImage}
+        defaultSource={require('../../assets/placeholder.png')}
+      />
+      <View style={styles.restaurantInfo}>
+        <Text style={styles.restaurantName}>{item.name}</Text>
+        {item.matchType === 'dish' && (
+          <Text style={styles.matchedDish}>
+            Found dish: {item.matchedDish}
+          </Text>
+        )}
+        <Text style={styles.restaurantDetails}>
+          {item.categories?.join(' • ')}
+        </Text>
+        <View style={styles.ratingContainer}>
+          <Ionicons name="star" size={16} color={COLORS.primary} />
+          <Text style={styles.rating}>{item.rating}</Text>
+          <Text style={styles.ratingCount}>({item.review_count})</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
+  if (loading) {
+    return (
+      <View style={styles.centerContainer}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+    );
+  }
+
+  if (results.length === 0) {
+    return (
+      <View style={styles.centerContainer}>
+        <Text style={styles.noResults}>No results found for "{query}"</Text>
+      </View>
+    );
+  }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.sectionTitle}>Restaurants</Text>
-      {results.restaurants.length > 0 ? (
-        results.restaurants.map((restaurant) => (
-          <TouchableOpacity 
-            key={restaurant.id} 
-            style={styles.resultCard}
-            onPress={() => handleRestaurantPress(restaurant)}
-          >
-            <Image source={{ uri: restaurant.image_url }} style={styles.resultImage} />
-            <View style={styles.resultInfo}>
-              <Text style={styles.resultName}>{restaurant.name}</Text>
-              <Text style={styles.resultDetails}>
-                {restaurant.categories.join(', ')} • {restaurant.price} • {restaurant.rating} ⭐ ({restaurant.review_count})
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ))
-      ) : (
-        <Text style={styles.noResultsText}>No restaurants found</Text>
-      )}
-
-      <Text style={styles.sectionTitle}>Menu Items</Text>
-      {results.menuItems.length > 0 ? (
-        results.menuItems.map((item) => (
-          <TouchableOpacity 
-            key={item.id} 
-            style={styles.resultCard}
-            onPress={() => handleMenuItemPress(item)}
-          >
-            <Image source={{ uri: item.image_url }} style={styles.resultImage} />
-            <View style={styles.resultInfo}>
-              <Text style={styles.resultName}>{item.name}</Text>
-              <Text style={styles.resultDetails}>{item.description}</Text>
-            </View>
-          </TouchableOpacity>
-        ))
-      ) : (
-        <Text style={styles.noResultsText}>No menu items found</Text>
-      )}
-    </ScrollView>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity 
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <Ionicons name="arrow-back" size={24} color={COLORS.text.primary} />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Search Results</Text>
+      </View>
+      <FlatList
+        data={results}
+        renderItem={renderRestaurantItem}
+        keyExtractor={item => item.id}
+        contentContainerStyle={styles.listContainer}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
   );
 }
 
@@ -120,45 +161,86 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
-    padding: SPACING.md,
   },
-  sectionTitle: {
-    ...TYPOGRAPHY.h2,
-    marginBottom: SPACING.md,
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.md,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
+  backButton: {
+    marginRight: SPACING.sm,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '600',
     color: COLORS.text.primary,
+  },
+  listContainer: {
+    padding: SPACING.md,
   },
   resultCard: {
     flexDirection: 'row',
-    marginBottom: SPACING.md,
     backgroundColor: COLORS.surface,
     borderRadius: 12,
+    marginBottom: SPACING.md,
     overflow: 'hidden',
     elevation: 2,
-    shadowColor: COLORS.card.shadow,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
+    shadowOpacity: 0.1,
     shadowRadius: 4,
   },
-  resultImage: {
-    width: 80,
-    height: 80,
+  restaurantImage: {
+    width: 100,
+    height: 100,
   },
-  resultInfo: {
+  restaurantInfo: {
     flex: 1,
-    padding: SPACING.sm,
+    padding: SPACING.md,
+    justifyContent: 'space-between',
   },
-  resultName: {
-    ...TYPOGRAPHY.h3,
+  restaurantName: {
+    fontSize: 16,
+    fontWeight: '600',
     color: COLORS.text.primary,
   },
-  resultDetails: {
-    ...TYPOGRAPHY.body,
+  restaurantDetails: {
+    fontSize: 14,
+    color: COLORS.text.secondary,
+    marginTop: 4,
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  rating: {
+    marginLeft: 4,
+    fontSize: 14,
+    fontWeight: '600',
+    color: COLORS.text.primary,
+  },
+  ratingCount: {
+    marginLeft: 4,
+    fontSize: 14,
     color: COLORS.text.secondary,
   },
-  noResultsText: {
-    ...TYPOGRAPHY.body,
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noResults: {
+    fontSize: 16,
     color: COLORS.text.secondary,
     textAlign: 'center',
-    marginTop: SPACING.md,
+  },
+  matchedDish: {
+    fontSize: 14,
+    color: COLORS.primary,
+    marginTop: 4,
+    fontStyle: 'italic'
   },
 });

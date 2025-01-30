@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Image } from 'react-native';
 import { COLORS, SPACING } from '../../theme';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,7 +9,8 @@ export default function HeaderBar({
   onBack, 
   rightComponent,
   transparent,
-  variant = 'default' // 'default' | 'large' | 'collapsed'
+  variant = 'default', // 'default' | 'large' | 'collapsed'
+  profileImage // Add this prop
 }) {
   const insets = useSafeAreaInsets();
   const isLarge = variant === 'large';
@@ -46,6 +47,13 @@ export default function HeaderBar({
             {title}
           </Text>
         </View>
+
+        {profileImage && (
+          <Image 
+            source={{ uri: profileImage }} 
+            style={styles.profileImage}
+          />
+        )}
 
         {rightComponent && (
           <View style={styles.rightComponent}>
@@ -114,5 +122,11 @@ const styles = StyleSheet.create({
     marginLeft: SPACING.sm,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  profileImage: {
+    width: 35,
+    height: 35,
+    borderRadius: 17.5,
+    marginLeft: SPACING.sm
   }
 });

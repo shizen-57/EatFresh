@@ -2,39 +2,48 @@ import React, { useState, useCallback } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity, Keyboard } from 'react-native';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { COLORS, SPACING } from '../../theme';
-import debounce from 'lodash.debounce';
 import { useNavigation } from '@react-navigation/native';
+import debounce from 'lodash/debounce';
 
-export default function SearchBar({ onSearch }) {
+export default function SearchBar({ containerStyle, autoFocus = false }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const navigation = useNavigation();
 
-  // Debounce search function to avoid too many API calls
   const debouncedSearch = useCallback(
-    debounce((text) => {
-      if (onSearch) onSearch(text);
+    debounce((query) => {
+      if (query.trim()) {
+        navigation.navigate('SearchResults', {
+          query: query.trim(),
+          timestamp: Date.now()
+        });
+      }
     }, 500),
-    []
+    [navigation]
   );
 
-  const handleClearSearch = () => {
-    setSearchQuery('');
-    if (onSearch) onSearch('');
-    Keyboard.dismiss();
+  const handleTextChange = (text) => {
+    setSearchQuery(text);
+    debouncedSearch(text);
   };
 
-  const handleSearchPress = () => {
-    navigation.navigate('SearchResults', { query: searchQuery });
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      Keyboard.dismiss();
+      navigation.navigate('SearchResults', {
+        query: searchQuery.trim(),
+        timestamp: Date.now()
+      });
+    }
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <View style={[styles.searchBar, isFocused && styles.searchBarFocused]}>
-        <TouchableOpacity onPress={handleSearchPress}>
+        <TouchableOpacity onPress={handleSearch}>
           <Feather 
             name="search" 
-            size={22} 
+            size={20} 
             color={isFocused ? COLORS.primary : COLORS.text.secondary} 
           />
         </TouchableOpacity>
@@ -44,26 +53,20 @@ export default function SearchBar({ onSearch }) {
           placeholder="Search for restaurants, dishes..."
           placeholderTextColor={COLORS.text.secondary}
           value={searchQuery}
-          onChangeText={(text) => {
-            setSearchQuery(text);
-            debouncedSearch(text);
-          }}
+          onChangeText={handleTextChange}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           returnKeyType="search"
-          onSubmitEditing={handleSearchPress}
+          onSubmitEditing={handleSearch}
+          autoFocus={autoFocus}
         />
 
         {searchQuery.length > 0 && (
           <TouchableOpacity 
-            onPress={handleClearSearch}
+            onPress={() => setSearchQuery('')}
             style={styles.clearButton}
           >
-            <MaterialIcons 
-              name="clear" 
-              size={20} 
-              color={COLORS.text.secondary} 
-            />
+            <MaterialIcons name="clear" size={18} color={COLORS.text.secondary} />
           </TouchableOpacity>
         )}
       </View>
@@ -84,7 +87,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surface,
     borderRadius: 12,
     paddingHorizontal: SPACING.md,
-    height: 48,
+    height: 45, // Increased from 36
     flex: 1,
   },
   searchBarFocused: {
@@ -96,6 +99,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.text.primary,
     marginLeft: SPACING.sm,
+    height: 45, // Added to match container height
   },
   clearButton: {
     marginLeft: SPACING.sm,
