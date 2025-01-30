@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/logooF.jpg",
     "userInterfaceStyle": "light",
-    "newArchEnabled": false,
+    "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -19,7 +19,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#fc8019"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.shifu42.EatFresh"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,6 +40,11 @@
         }
       ],
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "f1269b52-2481-4fca-9564-b64f159ec359"
+      }
+    }
   }
 }
