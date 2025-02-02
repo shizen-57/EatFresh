@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 47b23e5 (Admin App)
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import StackN from './src/Nav/StackN';
@@ -26,6 +29,7 @@ export default function App() {
     <NavigationContainer>
       <StackN />
     </NavigationContainer>
+<<<<<<< HEAD
 =======
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import React from "react";
@@ -115,5 +119,7 @@ export default function App() {
       <ExpoStatusBar style="auto" />
     </>
 >>>>>>> 8456e89e1ac2353da87da5a980d5e23ebfcd0661
+=======
+>>>>>>> 47b23e5 (Admin App)
   );
 }

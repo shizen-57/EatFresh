@@ -14,10 +14,14 @@
     "newArchEnabled": true,
     "splash": {
 <<<<<<< HEAD
+<<<<<<< HEAD
       "image": "./assets/splash.png",
 =======
       "image": "./assets/splash-icon.png",
 >>>>>>> 8456e89e1ac2353da87da5a980d5e23ebfcd0661
+=======
+      "image": "./assets/splash.png",
+>>>>>>> 47b23e5 (Admin App)
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -29,16 +33,24 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
 <<<<<<< HEAD
+<<<<<<< HEAD
       },
       "package": "com.shifu42.eatfresh"
 =======
       }
 >>>>>>> 8456e89e1ac2353da87da5a980d5e23ebfcd0661
+=======
+      },
+      "package": "com.shifu42.eatfresh"
+>>>>>>> 47b23e5 (Admin App)
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 47b23e5 (Admin App)
     "extra": {
       "eas": {
         "projectId": "05f7b5f2-2415-44de-a027-41f3cce55672"
