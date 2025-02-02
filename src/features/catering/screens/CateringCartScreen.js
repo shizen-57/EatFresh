@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, StyleSheet, Alert } from 'react-native';
+import { View, FlatList, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { Text, Button, Divider } from 'react-native-elements';
 import { useCatering } from '../context/CateringContext';
 import CateringOrderItem from './CatringOrderItem';
@@ -8,7 +8,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import { auth, db } from '../../../../firebase'; // Corrected import path
 
 const CateringCartScreen = ({ navigation }) => {
-  const { cateringCart, saveCateringOrder } = useCatering();
+  const { cateringCart, saveCateringOrder, removeFromCart } = useCatering();
 
   const calculateTotals = () => {
      console.log('Cart items for calculation:', cateringCart); // Debug log
@@ -71,13 +71,24 @@ const CateringCartScreen = ({ navigation }) => {
     <View style={styles.container}>
       <FlatList
         data={cateringCart}
-        renderItem={({ item }) => <CateringOrderItem item={item} />}
+        renderItem={({ item }) => (
+          <View style={styles.orderItemContainer}>
+            <CateringOrderItem item={item} />
+            <TouchableOpacity 
+              style={styles.removeButton}
+              onPress={() => removeFromCart(item.id)}
+            >
+              <Text style={styles.removeButtonText}>Remove</Text>
+            </TouchableOpacity>
+          </View>
+        )}
         keyExtractor={(item, index) => index.toString()}
         ItemSeparatorComponent={() => <Divider />}
       />
 
       <View style={styles.summaryContainer}>
-        <Text h4>Total: ${calculateTotals().total.toFixed(2)}</Text>
+        <Text h4>Subtotal: ৳{calculateTotals().subtotal.toFixed(2)}</Text>
+        <Text h4>Total: ৳{calculateTotals().total.toFixed(2)}</Text>
         <Button
           title="Proceed to Checkout"
           onPress={handleCheckout}
@@ -110,6 +121,24 @@ const styles = StyleSheet.create({
   },
   checkoutButton: {
     marginTop: 10,
+  },
+  orderItemContainer: {
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  removeButton: {
+    backgroundColor: "red",
+    padding: 5,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  removeButtonText: {
+    color: "white",
+    fontSize: 14,
   },
 });
 

@@ -34,7 +34,7 @@ export function CartProvider({ children }) {
       if (existingItemIndex >= 0) {
         newItems = [...currentRestaurant.items];
         const existingItem = newItems[existingItemIndex];
-        const newQuantity = (existingItem.quantity || 1) + 1;
+        const newQuantity = (existingItem.quantity || 1) + item.quantity;
         
         newItems[existingItemIndex] = {
           ...existingItem,
@@ -45,9 +45,9 @@ export function CartProvider({ children }) {
       } else {
         newItems = [...currentRestaurant.items, {
           ...item,
-          quantity: 1,
+          quantity: item.quantity,
           finalPrice: totalBasePrice,
-          itemTotalPrice: totalBasePrice
+          itemTotalPrice: totalBasePrice * item.quantity
         }];
       }
 
@@ -101,13 +101,16 @@ export function CartProvider({ children }) {
     });
   }, []);
 
-  const removeFromCart = useCallback((restaurantId, itemId) => {
+  const removeFromCart = useCallback((restaurantId, itemId, selectedOptions) => {
     setSelectedItems(current => {
       const newRestaurants = { ...current.restaurants };
       if (!newRestaurants[restaurantId]) return current;
 
+      const itemKey = `${itemId}-${JSON.stringify(selectedOptions)}`;
       const restaurant = newRestaurants[restaurantId];
-      const newItems = restaurant.items.filter(item => item.id !== itemId);
+      const newItems = restaurant.items.filter(item => 
+        `${item.id}-${JSON.stringify(item.selectedOptions)}` !== itemKey
+      );
 
       if (newItems.length === 0) {
         delete newRestaurants[restaurantId];
@@ -210,7 +213,7 @@ export function OrderItem({ item, showControls = true }) {
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.removeButton}
-            onPress={() => removeFromCart(item.restaurantId, item.id)}
+            onPress={() => removeFromCart(item.restaurantId, item.id, item.selectedOptions)}
           >
             <Text style={styles.removeButtonText}>Remove</Text>
           </TouchableOpacity>

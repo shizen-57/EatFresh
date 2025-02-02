@@ -1,8 +1,11 @@
-import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
-import { Text } from 'react-native-elements';
+import React, { useState } from 'react';
+import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { Text, Icon } from 'react-native-elements';
+import { useGroupOrder } from '../context/GroupOrderContext';
 
 export default function GroupOrderItem({ item }) {
+  const { groupCart, setGroupCart, handleRemoveItem } = useGroupOrder();
+
   const calculateItemTotal = (item) => {
     const basePrice = item.price || 0;
     const quantity = item.quantity || 1;
@@ -50,6 +53,12 @@ export default function GroupOrderItem({ item }) {
           </View>
         </View>
       </View>
+      <TouchableOpacity
+        style={styles.removeButton}
+        onPress={() => handleRemoveItem(item.id)}
+      >
+        <Icon name="trash" type="font-awesome" color="#ff3b30" />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -130,5 +139,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#3e4152',
     fontWeight: '500',
+  },
+  removeButton: {
+    padding: 10,
   },
 });

@@ -200,6 +200,21 @@ export const GroupOrderProvider = ({ children }) => {
     }
   };
 
+  const handleRemoveItem = async (itemId) => {
+    if (!groupOrder?.id) return;
+
+    const updatedItems = groupCart.filter(item => item.id !== itemId);
+    try {
+      await updateDoc(doc(db, 'groupOrders', groupOrder.id), { 
+        items: updatedItems 
+      });
+      setGroupCart(updatedItems); // Update local state
+    } catch (error) {
+      console.error('Failed to remove item from group cart:', error);
+      throw error;
+    }
+  };
+
   const finalizeOrder = async () => {
     if (!groupOrder?.id) return;
 
@@ -221,9 +236,11 @@ export const GroupOrderProvider = ({ children }) => {
         setGroupOrder,
         members,
         groupCart,
+        setGroupCart, // Ensure setGroupCart is included in the context provider
         createGroup,
         joinGroup,
         addItemToGroupCart,
+        handleRemoveItem,
         finalizeOrder,
         currentMember,
         leaveGroup,

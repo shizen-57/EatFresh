@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Text, Icon } from 'react-native-elements';
 import LottieView from 'lottie-react-native';
+import GroupOrderItem from '../Components/GroupOrderItem'; // Ensure this import is correct
 
 export default function GroupOrder_OrderedItem({ route }) {
   const { orderData } = route.params;
@@ -19,6 +20,12 @@ export default function GroupOrder_OrderedItem({ route }) {
     return (basePrice + optionsTotal) * quantity;
   };
 
+  const handleRemoveItem = (itemId) => {
+    if (!orderData.items) return;
+    const updatedItems = orderData.items.filter(item => item.id !== itemId);
+    // Update the order data in the context or backend
+  };
+
   const renderItems = () => {
     // Group items by member
     const groupedItems = orderData.items.reduce((acc, item) => {
@@ -32,21 +39,11 @@ export default function GroupOrder_OrderedItem({ route }) {
       <View key={member} style={styles.memberSection}>
         <Text style={styles.memberName}>{member}'s Items</Text>
         {items.map((item, index) => (
-          <View key={index} style={styles.orderItem}>
-            <View style={styles.itemHeader}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.quantity}>x{item.quantity || 1}</Text>
-            </View>
-            
-            {item.selectedOptions && Object.entries(item.selectedOptions).map(([category, option]) => (
-              <Text key={category} style={styles.optionText}>
-                {category}: {option.name} (+৳{option.price})
-              </Text>
-            ))}
-            
-            <View style={styles.itemPrice}>
-              <Text style={styles.priceText}>৳{calculateItemTotal(item)}</Text>
-            </View>
+          <View key={index} style={styles.itemContainer}>
+            <GroupOrderItem item={item} groupCart={orderData.items} setGroupCart={(updatedItems) => {
+              orderData.items = updatedItems;
+              // Update the order data in the context or backend
+            }} handleRemoveItem={handleRemoveItem} />
           </View>
         ))}
         <View style={styles.subtotalSection}>
@@ -228,5 +225,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'right',
     color: '#4CAF50',
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  removeButton: {
+    padding: 10,
   },
 });

@@ -16,6 +16,8 @@ import { useGroupOrder } from "../features/group_ordering/context/GroupOrderCont
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // Remove LinearGradient import
 
+import CartIcon from "../Components/home/CartIcon"; // Add this import
+
 // Remove banners constant
 
 export default function HomeScreen({ navigation }) {
@@ -167,7 +169,8 @@ export default function HomeScreen({ navigation }) {
         {/* Bottom Navigation */}
         <BottomTabs navigation={navigation} />
         
-        {/* Remove Cart Icon */}
+        {/* Add Cart Icon */}
+        <CartIcon navigation={navigation} />
       </View>
     </View>
   );

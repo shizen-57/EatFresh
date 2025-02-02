@@ -1,0 +1,5 @@
+-keep class com.facebook.hermes.unicode.** { *; }
+-keep class com.facebook.jni.** { *; }
+-keep class org.osmdroid.** { *; }
+-keepclassmembers class org.osmdroid.** { *; }
+-dontwarn org.osmdroid.**

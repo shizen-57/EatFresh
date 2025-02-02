@@ -1,15 +1,22 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import LottieView from 'lottie-react-native'; // Import LottieView
 import { useCart } from "../context/CartContext";
 import OrderItem from "../Components/RestaurantDetail/OrderItem";
 
 export default function CartScreen({ navigation }) {
-  const { selectedItems } = useCart();
+  const { selectedItems, removeFromCart } = useCart();
   const restaurants = Object.entries(selectedItems.restaurants || {});
 
   if (restaurants.length === 0) {
     return (
       <View style={styles.emptyContainer}>
+        <LottieView
+          source={require('../../assets/animations/empty-cart.json')} // Ensure the path is correct
+          autoPlay
+          loop
+          style={styles.emptyAnimation}
+        />
         <Text style={styles.emptyText}>Your cart is empty</Text>
       </View>
     );
@@ -30,11 +37,18 @@ export default function CartScreen({ navigation }) {
           <View key={restaurantId} style={styles.restaurantSection}>
             <Text style={styles.restaurantName}>{restaurant.name}</Text>
             {restaurant.items.map((item, index) => (
-              <OrderItem 
-                key={`${item.id}-${index}`}
-                item={item}
-                restaurantId={restaurantId}
-              />
+              <View key={`${item.id}-${index}`} style={styles.orderItemContainer}>
+                <OrderItem 
+                  item={item}
+                  restaurantId={restaurantId}
+                />
+                <TouchableOpacity 
+                  style={styles.removeButton}
+                  onPress={() => removeFromCart(restaurantId, item.id, item.selectedOptions)}
+                >
+                  <Text style={styles.removeButtonText}>Remove</Text>
+                </TouchableOpacity>
+              </View>
             ))}
             <Text style={styles.subtotal}>
               Subtotal: ৳{calculateRestaurantTotal(restaurant.items).toFixed(2)}
@@ -99,6 +113,11 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 18,
     color: 'gray',
+    marginTop: 20,
+  },
+  emptyAnimation: {
+    width: 150,
+    height: 150,
   },
   restaurantSection: {
     marginBottom: 20,
@@ -112,5 +131,23 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     marginTop: 10,
     paddingRight: 15,
-  }
+  },
+  orderItemContainer: {
+    flexDirection: "column", // Change to column to stack items vertically
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  removeButton: {
+    backgroundColor: "red",
+    padding: 5,
+    borderRadius: 5,
+    marginTop: 10, // Ensure the button is not too close to the text
+  },
+  removeButtonText: {
+    color: "white",
+    fontSize: 14,
+  },
 });

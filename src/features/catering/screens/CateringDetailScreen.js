@@ -46,7 +46,7 @@ const DetailHeader = ({ item }) => (
     <View style={styles.headerInfo}>
       <Text style={styles.title}>{item.name}</Text>
       <Text style={styles.description}>{item.description}</Text>
-      <Text style={styles.basePrice}>Base Price: ${item.price}</Text>
+      <Text style={styles.basePrice}>Base Price: ৳{item.price}</Text>
     </View>
   </View>
 );
@@ -240,7 +240,7 @@ const CateringDetailScreen = ({ route, navigation }) => {
       <View style={styles.footer}>
         <View style={styles.priceContainer}>
           <Text style={styles.totalLabel}>Total Amount</Text>
-          <Text style={styles.totalPrice}>${calculateTotalPrice().toFixed(2)}</Text>
+          <Text style={styles.totalPrice}>৳{calculateTotalPrice().toFixed(2)}</Text>
         </View>
         <Button
           title="Add to Catering Cart"

@@ -205,6 +205,27 @@ export default function ViewCart({ navigation }) {
   );
 }
 
+const OrderItem = ({ item }) => {
+  const { removeFromCart } = useCart();
+  return (
+    <View style={styles.orderItemContainer}>
+      <Text style={styles.itemName}>{item.name}</Text>
+      {item.selectedOptions && Object.entries(item.selectedOptions).map(([category, option]) => (
+        <Text key={category} style={styles.customization}>
+          {option.name} (+৳{option.price})
+        </Text>
+      ))}
+      <Text style={styles.price}>৳{item.itemTotalPrice}</Text>
+      <TouchableOpacity 
+        style={styles.removeButton}
+        onPress={() => removeFromCart(item.restaurantId, item.id, item.selectedOptions)}
+      >
+        <Text style={styles.removeButtonText}>Remove</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
@@ -269,5 +290,34 @@ const styles = StyleSheet.create({
   totalPrice: {
     fontSize: 18,
     fontWeight: "bold",
-  }
+  },
+  orderItemContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  itemName: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  customization: {
+    fontSize: 14,
+    color: "#888",
+  },
+  price: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  removeButton: {
+    backgroundColor: "red",
+    padding: 5,
+    borderRadius: 5,
+  },
+  removeButtonText: {
+    color: "white",
+    fontSize: 14,
+  },
 });

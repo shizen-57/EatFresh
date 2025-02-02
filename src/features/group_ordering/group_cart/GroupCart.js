@@ -12,6 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useGroupOrder } from '../context/GroupOrderContext';
 import { auth } from '../../../../firebase';
+import GroupOrderItem from '../Components/GroupOrderItem'; // Ensure this import is correct
 
 export default function GroupCart() {
   const navigation = useNavigation();
@@ -53,6 +54,13 @@ export default function GroupCart() {
     updateGroupOrder({ ...groupOrder, items: updatedItems });
   };
 
+  const handleRemoveItem = (itemId) => {
+    if (!cartItems) return;
+    const updatedItems = cartItems.filter(item => item.id !== itemId);
+    setCartItems(updatedItems);
+    updateGroupOrder({ ...groupOrder, items: updatedItems });
+  };
+
   const handleCheckout = () => {
     if (!cartItems.length) {
       Alert.alert('Error', 'Your cart is empty');
@@ -76,44 +84,7 @@ export default function GroupCart() {
 
     return (
       <View key={`${item.id}-${item.addedBy}`} style={styles.cartItem}>
-        <Image
-          source={{ uri: item.image_url }}
-          style={styles.itemImage}
-          defaultSource={require('../../../../assets/placeholder.png')}
-        />
-        
-        <View style={styles.itemDetails}>
-          <Text style={styles.itemName}>{item.name}</Text>
-          <Text style={styles.addedBy}>Added by: {item.addedBy}</Text>
-          <Text style={styles.itemPrice}>৳{(item.finalPrice || item.price) * (item.quantity || 1)}</Text>
-        </View>
-
-        {isMyItem && (
-          <View style={styles.quantityContainer}>
-            <TouchableOpacity 
-              onPress={() => updateItemQuantity(item.id, -1)}
-              style={styles.quantityButton}
-            >
-              <MaterialIcons name="remove" size={20} color="#FF6B6B" />
-            </TouchableOpacity>
-            
-            <Text style={styles.quantity}>{item.quantity || 1}</Text>
-            
-            <TouchableOpacity 
-              onPress={() => updateItemQuantity(item.id, 1)}
-              style={styles.quantityButton}
-            >
-              <MaterialIcons name="add" size={20} color="#FF6B6B" />
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              onPress={() => removeItem(item.id)}
-              style={styles.removeButton}
-            >
-              <MaterialIcons name="delete" size={24} color="#FF6B6B" />
-            </TouchableOpacity>
-          </View>
-        )}
+        <GroupOrderItem item={item} handleRemoveItem={handleRemoveItem} />
       </View>
     );
   };

@@ -4,7 +4,7 @@ import { Text, Button, Icon, Divider } from 'react-native-elements';
 import { useFocusEffect } from '@react-navigation/native';
 import { useGroupOrder } from '../context/GroupOrderContext';
 import GroupOrderSummary from '../Components/GroupOrderSummary';
-import GroupOrderItem from '../Components/GroupOrderItem';
+import GroupOrderItem from '../Components/GroupOrderItem'; // Ensure this import is correct
 import QRCodeGenerator from '../Components/QRCodeGenerator';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '../../../theme/colors';
@@ -15,7 +15,8 @@ export default function GroupOrderScreen({ navigation }) {
     groupCart, 
     members, 
     currentMember, 
-    finalizeOrder 
+    finalizeOrder,
+    setGroupCart // Ensure setGroupCart is imported from context
   } = useGroupOrder();
   const [qrModalVisible, setQrModalVisible] = useState(false);
 
@@ -75,6 +76,12 @@ export default function GroupOrderScreen({ navigation }) {
     navigation.navigate('AddItem');
   };
 
+  const handleRemoveItem = (itemId) => {
+    const updatedGroupCart = groupCart.filter(item => item.id !== itemId);
+    setGroupCart(updatedGroupCart);
+    // Update the group order in the context or backend
+  };
+
   const groupedItems = React.useMemo(() => {
     return groupCart.reduce((acc, item) => {
       const memberItems = acc[item.addedBy] || [];
@@ -118,7 +125,9 @@ export default function GroupOrderScreen({ navigation }) {
         <Text style={styles.memberTotal}>৳{calculateMemberTotal(items)}</Text>
       </View>
       {items.map((item, index) => (
-        <GroupOrderItem key={`${item.id}-${index}`} item={item} />
+        <View key={`${item.id}-${index}`} style={styles.itemContainer}>
+          <GroupOrderItem item={item} handleRemoveItem={handleRemoveItem} />
+        </View>
       ))}
     </View>
   );
@@ -489,5 +498,13 @@ const styles = StyleSheet.create({
     color: '#666',
     marginTop: 20,
     fontSize: 16,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  removeButton: {
+    padding: 10,
   },
 });

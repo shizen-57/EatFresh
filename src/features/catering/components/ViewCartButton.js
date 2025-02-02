@@ -18,7 +18,7 @@ const ViewCartButton = ({ itemCount, total, onPress }) => {
           <Text style={styles.itemCountText}>{itemCount}</Text>
         </View>
         <Text style={styles.viewCartText}>View Cart</Text>
-        <Text style={styles.totalText}>${total.toFixed(2)}</Text>
+        <Text style={styles.totalText}>৳{total.toFixed(2)}</Text>
       </View>
     </TouchableOpacity>
   );

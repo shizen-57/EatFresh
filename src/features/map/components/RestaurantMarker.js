@@ -3,16 +3,25 @@ import { Marker } from "react-native-maps";
 import { View, Image, StyleSheet } from "react-native";
 
 const RestaurantMarker = ({ restaurant, onPress }) => {
-  if (!restaurant.location?.latitude || !restaurant.location?.longitude) {
-    console.error('Invalid location data for restaurant:', restaurant.name);
+  // Add multiple validation checks
+  if (!restaurant?.location) {
+    console.warn('Restaurant location is missing:', restaurant?.name);
+    return null;
+  }
+
+  const latitude = parseFloat(restaurant.location.latitude);
+  const longitude = parseFloat(restaurant.location.longitude);
+
+  if (isNaN(latitude) || isNaN(longitude)) {
+    console.warn('Invalid coordinates for restaurant:', restaurant.name);
     return null;
   }
 
   return (
     <Marker
       coordinate={{
-        latitude: restaurant.location.latitude,
-        longitude: restaurant.location.longitude,
+        latitude,
+        longitude,
       }}
       onPress={onPress}
     >

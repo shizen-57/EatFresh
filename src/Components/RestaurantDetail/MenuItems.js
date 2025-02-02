@@ -196,14 +196,16 @@ const MenuItemsComponent = ({ restaurantName, restaurantId, foods }) => {
   const [modalState, setModalState] = useState({
     visible: false,
     selectedFood: null,
-    selectedOptions: {}
+    selectedOptions: {},
+    quantity: 1 // Add quantity to modal state
   });
 
   const handleFoodSelect = useCallback((food) => {
     setModalState({
       visible: true,
       selectedFood: food,
-      selectedOptions: {}
+      selectedOptions: {},
+      quantity: 1 // Reset quantity when a new food is selected
     });
   }, []);
 
@@ -221,7 +223,8 @@ const MenuItemsComponent = ({ restaurantName, restaurantId, foods }) => {
     setModalState({
       visible: false,
       selectedFood: null,
-      selectedOptions: {}
+      selectedOptions: {},
+      quantity: 1 // Reset quantity when modal is closed
     });
   }, []);
 
@@ -242,7 +245,7 @@ const MenuItemsComponent = ({ restaurantName, restaurantId, foods }) => {
       ...selectedFood,
       selectedOptions,
       price: selectedFood.price,
-      finalPrice: basePrice * quantity,
+      finalPrice: basePrice,
       restaurantName,
       restaurantId,
       addedAt: new Date().toISOString(),

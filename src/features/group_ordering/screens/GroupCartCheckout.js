@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { View, StyleSheet, ScrollView, TextInput, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, TextInput, Alert, TouchableOpacity } from 'react-native';
 import { Text, Button, Icon } from 'react-native-elements';
 import { useGroupOrder } from '../context/GroupOrderContext';
 import { db, collection, addDoc } from '../../../../firebase';
+import GroupOrderItem from '../Components/GroupOrderItem'; // Ensure this import is correct
 
 export default function GroupCartCheckout({ navigation, route }) {
   const { items, groupOrderId } = route.params; // Get items from route params
@@ -75,29 +76,18 @@ export default function GroupCartCheckout({ navigation, route }) {
     }
   };
 
+  const handleRemoveItem = (itemId) => {
+    if (!items) return;
+    const updatedItems = items.filter(item => item.id !== itemId);
+    // Update the items in the context or backend
+  };
+
   const renderMemberItems = (member, memberItems) => (
     <View key={member} style={styles.memberItems}>
       <Text style={styles.memberName}>{member}'s Items</Text>
       {memberItems.map((item, index) => (
-        <View key={index} style={styles.item}>
-          <View style={styles.itemHeader}>
-            <Text style={styles.itemName}>{item.name}</Text>
-            <Text style={styles.itemQuantity}>x{item.quantity || 1}</Text>
-          </View>
-          
-          {item.selectedOptions && (
-            <View style={styles.optionsContainer}>
-              {Object.entries(item.selectedOptions).map(([category, option]) => (
-                <Text key={category} style={styles.optionText}>
-                  {category}: {option.name} (+৳{option.price})
-                </Text>
-              ))}
-            </View>
-          )}
-          
-          <Text style={styles.itemTotal}>
-            ৳{calculateItemTotal(item)}
-          </Text>
+        <View key={index} style={styles.itemContainer}>
+          <GroupOrderItem item={item} handleRemoveItem={handleRemoveItem} />
         </View>
       ))}
       <View style={styles.memberTotal}>
@@ -276,5 +266,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'right',
     color: '#4CAF50',
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  removeButton: {
+    padding: 10,
   },
 });

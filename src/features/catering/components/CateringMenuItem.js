@@ -6,7 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 const CateringMenuItem = ({ item, onSelect }) => {
   const basePrice = item.price || 0;
   const minGuests = item.minGuests || 10;
-  const priceText = `$${basePrice} base price`;
+  const priceText = `৳${basePrice} base price`;
 
   return (
     <TouchableOpacity 

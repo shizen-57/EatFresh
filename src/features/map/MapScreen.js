@@ -1,8 +1,9 @@
 // MapScreen.js
 import React, { useEffect, useState, useRef } from "react";
-import { View, StyleSheet, Dimensions, ActivityIndicator, TouchableOpacity } from "react-native";
-import MapView, { Marker, Callout, Polyline, PROVIDER_DEFAULT } from "react-native-maps";
+import { View, StyleSheet, Dimensions, ActivityIndicator, TouchableOpacity, Alert } from "react-native";
+import MapView, { Marker, Callout, Polyline, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from 'expo-location';
+import NetInfo from "@react-native-community/netinfo";
 import { realtimeDb, ref, onValue } from "../../../firebase";
 import RestaurantPreview from "./components/RestaurantPreview";
 import MapSearchBar from "./components/MapSearchBar";
@@ -11,6 +12,8 @@ import RestaurantMarker from "./components/RestaurantMarker";
 
 const OSRM_API = "https://router.project-osrm.org/route/v1";
 const { width, height } = Dimensions.get('window');
+
+
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
@@ -32,18 +35,44 @@ export default function MapScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [region, setRegion] = useState(INITIAL_REGION);
 
+  const checkNetworkAndPermissions = async () => {
+    try {
+      // Check network connection
+      const networkState = await NetInfo.fetch();
+      if (!networkState.isConnected) {
+        Alert.alert(
+          "No Internet Connection",
+          "Please check your internet connection and try again."
+        );
+        return false;
+      }
+
+      // Check location permissions
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert(
+          "Permission Denied",
+          "Location permission is required for this feature."
+        );
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error checking requirements:', error);
+      return false;
+    }
+  };
+
   useEffect(() => {
     let isMounted = true;
 
     const initializeMap = async () => {
+      if (!(await checkNetworkAndPermissions())) {
+        if (isMounted) setIsLoading(false);
+        return;
+      }
       try {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-          if (isMounted) setIsLoading(false);
-          return;
-        }
-
         let location = await Location.getCurrentPositionAsync({});
         if (isMounted) {
           setLocation(location);
@@ -81,21 +110,32 @@ export default function MapScreen() {
         if (snapshot.exists()) {
           const restaurantsData = snapshot.val();
           
-          // Get locations data
           onValue(locationsRef, (locationSnapshot) => {
             if (locationSnapshot.exists()) {
               const locationsData = locationSnapshot.val();
               
-              // Combine restaurant and location data
-              const restaurantList = Object.entries(restaurantsData).map(([id, restaurant]) => ({
-                id,
-                ...restaurant,
-                location: {
-                  ...locationsData[restaurant.location],
-                  latitude: parseFloat(locationsData[restaurant.location].latitude),
-                  longitude: parseFloat(locationsData[restaurant.location].longitude)
-                }
-              }));
+              // Filter out restaurants with invalid location data
+              const restaurantList = Object.entries(restaurantsData)
+                .map(([id, restaurant]) => {
+                  const locationData = locationsData[restaurant.location];
+                  
+                  // Skip restaurants with missing or invalid location data
+                  if (!locationData?.latitude || !locationData?.longitude) {
+                    console.warn(`Invalid location data for restaurant: ${restaurant.name}`);
+                    return null;
+                  }
+
+                  return {
+                    id,
+                    ...restaurant,
+                    location: {
+                      ...locationData,
+                      latitude: parseFloat(locationData.latitude),
+                      longitude: parseFloat(locationData.longitude)
+                    }
+                  };
+                })
+                .filter(Boolean); // Remove null entries
               
               setRestaurants(restaurantList);
             }
@@ -159,6 +199,8 @@ export default function MapScreen() {
         longitudeDelta: LONGITUDE_DELTA,
       };
       mapRef.current?.animateToRegion(userRegion, 1000);
+    } else {
+      Alert.alert("Location not available", "Unable to fetch user location.");
     }
   };
 
@@ -194,12 +236,15 @@ export default function MapScreen() {
     <View style={styles.container}>
       <MapView
         ref={mapRef}
-        provider={PROVIDER_DEFAULT}
+        provider={PROVIDER_GOOGLE}
         style={StyleSheet.absoluteFillObject}
-        initialRegion={region}
+        lRegion={region}
         showsUserLocation={true}
         showsMyLocationButton={false}
         onPress={handleMapPress}
+        minZoomLevel={3}
+        loadingEnabled={true}
+        onError={(error) => console.warn('Map Error:', error)}
       >
         {restaurants.map((restaurant) => (
           <RestaurantMarker

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Text, ScrollView } from 'react-native';
 import { Button } from 'react-native-elements';
 import { useGroupOrder } from '../context/GroupOrderContext';
-import GroupOrderItem from './GroupOrderItem';
+import GroupOrderItem from '../Components/GroupOrderItem';
 
 const GroupOrderCart = ({ navigation }) => {
   const { groupCart, currentMember, groupOrder } = useGroupOrder();
