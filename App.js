@@ -1,20 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import StackN from './src/Nav/StackN';
+
+// Firebase imports
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './firebase';
 
 export default function App() {
+  useEffect(() => {
+    // Check authentication state
+    const subscriber = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log('User is signed in');
+      } else {
+        console.log('No user is signed in');
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => subscriber();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <StackN />
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

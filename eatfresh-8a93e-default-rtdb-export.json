@@ -1,0 +1,1507 @@
+{
+  "users": {
+    "userId1": {
+      "name": "Restaurant Owner 1",
+      "email": "owner1@example.com",
+      "restaurants": ["restaurantId1"]
+    }
+  },
+  "restaurants": {
+    "restaurantId1": {
+      "owner": "userId1",
+      "name": "Aunty's Kitchen",
+      "location": "locationId1",
+      "image_url": "https://i.ibb.co.com/FqZ2MDb/Whats-App-Image-2025-01-11-at-23-49-34-e282a4b5.jpg",
+      "transactions": ["delivery", "catering"],
+      "categories": ["bangladeshi", "homecooked"],
+      "price": "$",
+      "rating": 4.8,
+      "review_count": 150,
+      "menu": ["menuItem1", "menuItem2", "menuItem3", "menuItem4", "menuItem5"]
+    },
+    "restaurantId10": {
+      "owner": "userId1",
+      "name": "The Curry House",
+      "location": "locationId10",
+      "image_url": "https://i.ibb.co.com/ftqDp1G/Whats-App-Image-2025-01-11-at-23-49-33-6ca4d6c2.jpg",
+      "transactions": ["delivery", "dine-in"],
+      "categories": ["indian", "curry"],
+      "price": "$$",
+      "rating": 4.2,
+      "review_count": 170,
+      "menu": ["menuItem6", "menuItem7", "menuItem8", "menuItem9", "menuItem10"]
+    },
+    "restaurantId2": {
+      "owner": "userId1",
+      "name": "Biryani House",
+      "location": "locationId2",
+      "image_url": "https://i.ibb.co.com/tqLF3WT/Whats-App-Image-2025-01-11-at-23-49-33-61957aab.jpg",
+      "transactions": ["delivery", "dine-in"],
+      "categories": ["bangladeshi", "biryani"],
+      "price": "$$",
+      "rating": 4.4,
+      "review_count": 210,
+      "menu": ["menuItem11", "menuItem12", "menuItem13", "menuItem14", "menuItem15"]
+    },
+    "restaurantId3": {
+      "owner": "userId1",
+      "name": "Sundarbans Kitchen",
+      "location": "locationId3",
+      "image_url": "https://i.ibb.co.com/ggzwJ8m/Whats-App-Image-2025-01-11-at-23-49-33-8a299249.jpg",
+      "transactions": ["delivery", "dine-in"],
+      "categories": ["bangladeshi", "seafood"],
+      "price": "$$$",
+      "rating": 4.6,
+      "review_count": 120,
+      "menu": ["menuItem16", "menuItem17", "menuItem18", "menuItem19", "menuItem20"]
+    },
+    "restaurantId4": {
+      "owner": "userId1",
+      "name": "Tandoor Delight",
+      "location": "locationId4",
+      "image_url": "https://i.ibb.co.com/nDXXyKx/Whats-App-Image-2025-01-11-at-23-49-33-08bc9b6a.jpg",
+      "transactions": ["delivery", "dine-in"],
+      "categories": ["indian", "tandoori"],
+      "price": "$$$",
+      "rating": 4.3,
+      "review_count": 180,
+      "menu": ["menuItem21", "menuItem22", "menuItem23", "menuItem24", "menuItem25"]
+    },
+    "restaurantId5": {
+      "owner": "userId1",
+      "name": "Aamader Ranna Ghor",
+      "location": "locationId5",
+      "image_url": "https://i.ibb.co.com/2ZCJdrd/Whats-App-Image-2025-01-11-at-23-49-32-d5e259e0.jpg",
+      "transactions": ["delivery", "dine-in"],
+      "categories": ["bangladeshi", "luxury"],
+      "price": "$$$",
+      "rating": 4.9,
+      "review_count": 300,
+      "menu": ["menuItem26", "menuItem27", "menuItem28", "menuItem29", "menuItem30"]
+    },
+    "restaurantId6": {
+      "owner": "userId1",
+      "name": "Street Food Hub",
+      "location": "locationId6",
+      "image_url": "https://i.ibb.co.com/ZGtc6jg/Whats-App-Image-2025-01-11-at-23-49-32-2897a061.jpg",
+      "transactions": ["delivery", "dine-in"],
+      "categories": ["streetfood", "bangladeshi"],
+      "price": "$",
+      "rating": 4.5,
+      "review_count": 250,
+      "menu": ["menuItem31", "menuItem32", "menuItem33", "menuItem34", "menuItem35"]
+    },
+    "restaurantId7": {
+      "owner": "userId1",
+      "name": "Pothik's Plate",
+      "location": "locationId7",
+      "image_url": "https://i.ibb.co.com/mNb0xs9/Whats-App-Image-2025-01-11-at-23-49-31-fce28845.jpg",
+      "transactions": ["Catering"],
+      "categories": ["grill", "international"],
+      "price": "$$$",
+      "rating": 4.7,
+      "review_count": 180,
+      "menu": ["menuItem36", "menuItem37", "menuItem38", "menuItem39", "menuItem40"]
+    },
+    "restaurantId8": {
+      "owner": "userId1",
+      "name": "Ruchitomo",
+      "location": "locationId8",
+      "image_url": "https://i.ibb.co.com/1mTz9Gn/Whats-App-Image-2025-01-11-at-23-49-31-14cb18d1.jpg",
+      "transactions": ["dine-in", "delivery"],
+      "categories": ["bangladeshi", "bistro"],
+      "price": "$$",
+      "rating": 4.3,
+      "review_count": 130,
+      "menu": ["menuItem41", "menuItem42", "menuItem43", "menuItem44", "menuItem45"]
+    },
+    "restaurantId9": {
+      "owner": "userId1",
+      "name": "Kebabs Homies",
+      "location": "locationId9",
+      "image_url": "https://i.ibb.co.com/HrybnBZ/Whats-App-Image-2025-01-11-at-23-49-31-f4724e0c.jpg",
+      "transactions": ["dine-in", "delivery"],
+      "categories": ["kebabs", "grill"],
+      "price": "$$",
+      "rating": 4.6,
+      "review_count": 210,
+      "menu": ["menuItem46", "menuItem47", "menuItem48", "menuItem49", "menuItem50"]
+    }
+  },
+  "locations": {
+    "locationId1": {
+      "address1": "Dhanmondi",
+      "city": "Dhanmondi",
+      "state": "Dhaka",
+      "zip_code": "1205",
+      "latitude": 23.8103,
+      "longitude": 90.4125
+    },
+    "locationId10": {
+      "address1": "Shahbagh",
+      "city": "Shahbagh",
+      "state": "Dhaka",
+      "zip_code": "1205",
+      "latitude": 23.7498,
+      "longitude": 90.394
+    },
+    "locationId2": {
+      "address1": "South Avenue, Banani",
+      "city": "Dhaka",
+      "state": "Dhaka",
+      "zip_code": "1213",
+      "latitude": 23.8189,
+      "longitude": 90.4
+    },
+    "locationId3": {
+      "address1": "Block H, Road 7, Baridhara",
+      "city": "Dhaka",
+      "state": "Dhaka",
+      "zip_code": "1210",
+      "latitude": 23.8103,
+      "longitude": 90.4125
+    },
+    "locationId4": {
+      "address1": "Road 2, Farmgate",
+      "city": "Dhaka",
+      "state": "Dhaka",
+      "zip_code": "1215",
+      "latitude": 23.778,
+      "longitude": 90.404
+    },
+    "locationId5": {
+      "address1": "Sector 5, Mirpur",
+      "city": "Dhaka",
+      "state": "Dhaka",
+      "zip_code": "1217",
+      "latitude": 23.822,
+      "longitude": 90.367
+    },
+    "locationId6": {
+      "address1": "Road 10, Uttara",
+      "city": "Dhaka",
+      "state": "Dhaka",
+      "zip_code": "1230",
+      "latitude": 23.8741,
+      "longitude": 90.4027
+    },
+    "locationId7": {
+      "address1": "Block C, Gulshan",
+      "city": "Dhaka",
+      "state": "Dhaka",
+      "zip_code": "1212",
+      "latitude": 23.7938,
+      "longitude": 90.3964
+    },
+    "locationId8": {
+      "address1": "Dhanmondi 27",
+      "city": "Dhaka",
+      "state": "Dhaka",
+      "zip_code": "1209",
+      "latitude": 23.7535,
+      "longitude": 90.3845
+    },
+    "locationId9": {
+      "address1": "Sector 3, Uttara",
+      "city": "Dhaka",
+      "state": "Dhaka",
+      "zip_code": "1230",
+      "latitude": 23.8697,
+      "longitude": 90.3974
+    }
+  },
+  "categories": {
+    "bangladeshi": { 
+      "alias": "bangladeshi", 
+      "title": "Bangladeshi" 
+    },
+    "homecooked": { 
+      "alias": "homecooked", 
+      "title": "Home-Cooked" 
+    },
+    "indian": { 
+      "alias": "indian", 
+      "title": "Indian" 
+    },
+    "curry": { 
+      "alias": "curry", 
+      "title": "Curry" 
+    },
+    "biryani": { 
+      "alias": "biryani", 
+      "title": "Biryani" 
+    },
+    "seafood": { 
+      "alias": "seafood", 
+      "title": "Seafood" 
+    },
+    "tandoori": { 
+      "alias": "tandoori", 
+      "title": "Tandoori" 
+    },
+    "luxury": { 
+      "alias": "luxury", 
+      "title": "Luxury" 
+    },
+    "streetfood": { 
+      "alias": "streetfood", 
+      "title": "Street Food" 
+    },
+    "grill": { 
+      "alias": "grill", 
+      "title": "Grill" 
+    },
+    "international": { 
+      "alias": "international", 
+      "title": "International" 
+    },
+    "bistro": { 
+      "alias": "bistro", 
+      "title": "Bistro" 
+    },
+    "kebabs": { 
+      "alias": "kebabs", 
+      "title": "Kebabs" 
+    }
+  },
+  "menuItems": {
+    "menuItem1": {
+      "restaurantId": "restaurantId1",
+      "name": "Shorshe Ilish",
+      "description": "Hilsha fish cooked in mustard sauce, served with steamed rice.",
+      "price": 750,
+      "image_url": "https://example.com/images/shorshe_ilish.jpg",
+      "dish_type": ["Bengali", "Seafood"],
+      "customizable": true,
+      "options": {
+        "rice_type": [
+          { "id": "rice1", "name": "Plain Rice", "price": 0 },
+          { "id": "rice2", "name": "Polao", "price": 50 },
+          { "id": "rice3", "name": "Brown Rice", "price": 30 }
+        ],
+        "fish_size": [
+          { "id": "size1", "name": "Regular", "price": 0 },
+          { "id": "size2", "name": "Large", "price": 200 },
+          { "id": "size3", "name": "Extra Large", "price": 400 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Mustard Sauce", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem2": {
+      "restaurantId": "restaurantId1",
+      "name": "Kacchi Biryani",
+      "description": "Fragrant basmati rice with mutton, cooked with spices and yogurt.",
+      "price": 500,
+      "image_url": "https://example.com/images/kacchi_biryani.jpg",
+      "dish_type": ["Bengali", "Biryani"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 },
+          { "id": "portion3", "name": "Family Size", "price": 400 }
+        ],
+        "meat_quantity": [
+          { "id": "meat1", "name": "Regular", "price": 0 },
+          { "id": "meat2", "name": "Extra Meat", "price": 150 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Boiled Egg", "price": 20 },
+          { "id": "addon2", "name": "Raita", "price": 30 },
+          { "id": "addon3", "name": "Salad", "price": 25 }
+        ]
+      }
+    },
+    "menuItem3": {
+      "restaurantId": "restaurantId1",
+      "name": "Bhuna Khichuri",
+      "description": "Moong dal khichuri served with beef curry.",
+      "price": 400,
+      "image_url": "https://example.com/images/bhuna_khichuri.jpg",
+      "dish_type": ["Bengali", "Khichuri"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 150 }
+        ],
+        "meat_type": [
+          { "id": "meat1", "name": "Beef", "price": 0 },
+          { "id": "meat2", "name": "Mutton", "price": 100 },
+          { "id": "meat3", "name": "Chicken", "price": 50 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Boiled Egg", "price": 20 },
+          { "id": "addon2", "name": "Begun Bhaja", "price": 30 },
+          { "id": "addon3", "name": "Extra Ghee", "price": 40 }
+        ]
+      }
+    },
+    "menuItem4": {
+      "restaurantId": "restaurantId1",
+      "name": "Chingri Malai Curry",
+      "description": "Prawns cooked in coconut milk with spices.",
+      "price": 650,
+      "image_url": "https://example.com/images/chingri_malai_curry.jpg",
+      "dish_type": ["Bengali", "Seafood"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Coconut Milk", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem5": {
+      "restaurantId": "restaurantId1",
+      "name": "Begun Bharta",
+      "description": "Mashed eggplant with mustard oil, green chili, and onions.",
+      "price": 150,
+      "image_url": "https://example.com/images/begun_bharta.jpg",
+      "dish_type": ["Bengali", "Vegetarian"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 50 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Mustard Oil", "price": 20 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem6": {
+      "restaurantId": "restaurantId10",
+      "name": "Butter Chicken",
+      "description": "Creamy and rich chicken curry.",
+      "price": 800,
+      "image_url": "https://example.com/images/butter_chicken.jpg",
+      "dish_type": ["Indian", "Curry"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Butter", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem7": {
+      "restaurantId": "restaurantId10",
+      "name": "Chicken Tikka Masala",
+      "description": "Grilled chicken cooked in a tangy tomato-based curry.",
+      "price": 700,
+      "image_url": "https://example.com/images/chicken_tikka_masala.jpg",
+      "dish_type": ["Indian", "Curry"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Tomato Sauce", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem8": {
+      "restaurantId": "restaurantId10",
+      "name": "Lamb Rogan Josh",
+      "description": "Tender lamb cooked in a rich gravy with spices.",
+      "price": 950,
+      "image_url": "https://example.com/images/lamb_rogan_josh.jpg",
+      "dish_type": ["Indian", "Curry"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Gravy", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem9": {
+      "restaurantId": "restaurantId10",
+      "name": "Dal Makhani",
+      "description": "Lentils cooked in creamy butter sauce.",
+      "price": 400,
+      "image_url": "https://example.com/images/dal_makhani.jpg",
+      "dish_type": ["Indian", "Vegetarian"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 100 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Butter", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem10": {
+      "restaurantId": "restaurantId10",
+      "name": "Naan",
+      "description": "Soft, fluffy Indian flatbread.",
+      "price": 120,
+      "image_url": "https://example.com/images/naan.jpg",
+      "dish_type": ["Indian", "Bread"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 50 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Garlic", "price": 20 },
+          { "id": "addon2", "name": "Butter", "price": 30 },
+          { "id": "addon3", "name": "Cheese", "price": 40 }
+        ]
+      }
+    },
+    "menuItem11": {
+      "restaurantId": "restaurantId2",
+      "name": "Kacchi Biryani",
+      "description": "Fragrant basmati rice with mutton, cooked with spices.",
+      "price": 850,
+      "image_url": "https://example.com/images/kacchi_biryani.jpg",
+      "dish_type": ["Bengali", "Biryani"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 },
+          { "id": "portion3", "name": "Family Size", "price": 400 }
+        ],
+        "meat_quantity": [
+          { "id": "meat1", "name": "Regular", "price": 0 },
+          { "id": "meat2", "name": "Extra Meat", "price": 150 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Boiled Egg", "price": 20 },
+          { "id": "addon2", "name": "Raita", "price": 30 },
+          { "id": "addon3", "name": "Salad", "price": 25 }
+        ]
+      }
+    },
+    "menuItem12": {
+      "restaurantId": "restaurantId2",
+      "name": "Chicken Biryani",
+      "description": "Biryani rice with tender chicken and aromatic spices.",
+      "price": 750,
+      "image_url": "https://example.com/images/chicken_biryani.jpg",
+      "dish_type": ["Bengali", "Biryani"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 },
+          { "id": "portion3", "name": "Family Size", "price": 400 }
+        ],
+        "meat_quantity": [
+          { "id": "meat1", "name": "Regular", "price": 0 },
+          { "id": "meat2", "name": "Extra Meat", "price": 150 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Boiled Egg", "price": 20 },
+          { "id": "addon2", "name": "Raita", "price": 30 },
+          { "id": "addon3", "name": "Salad", "price": 25 }
+        ]
+      }
+    },
+    "menuItem13": {
+      "restaurantId": "restaurantId2",
+      "name": "Beef Biryani",
+      "description": "Basmati rice cooked with spicy beef, yogurt, and herbs.",
+      "price": 900,
+      "image_url": "https://example.com/images/beef_biryani.jpg",
+      "dish_type": ["Bengali", "Biryani"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 },
+          { "id": "portion3", "name": "Family Size", "price": 400 }
+        ],
+        "meat_quantity": [
+          { "id": "meat1", "name": "Regular", "price": 0 },
+          { "id": "meat2", "name": "Extra Meat", "price": 150 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Boiled Egg", "price": 20 },
+          { "id": "addon2", "name": "Raita", "price": 30 },
+          { "id": "addon3", "name": "Salad", "price": 25 }
+        ]
+      }
+    },
+    "menuItem14": {
+      "restaurantId": "restaurantId2",
+      "name": "Fried Rice",
+      "description": "Stir-fried rice with vegetables and your choice of meat.",
+      "price": 450,
+      "image_url": "https://example.com/images/fried_rice.jpg",
+      "dish_type": ["Bengali", "Rice"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 100 }
+        ],
+        "meat_type": [
+          { "id": "meat1", "name": "Chicken", "price": 0 },
+          { "id": "meat2", "name": "Beef", "price": 50 },
+          { "id": "meat3", "name": "Shrimp", "price": 100 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Fried Egg", "price": 20 },
+          { "id": "addon2", "name": "Extra Vegetables", "price": 30 },
+          { "id": "addon3", "name": "Extra Meat", "price": 50 }
+        ]
+      }
+    },
+    "menuItem15": {
+      "restaurantId": "restaurantId2",
+      "name": "Raita",
+      "description": "Yogurt with cucumber, mint, and spices.",
+      "price": 100,
+      "image_url": "https://example.com/images/raita.jpg",
+      "dish_type": ["Indian", "Side"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 50 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Cucumber", "price": 10 },
+          { "id": "addon2", "name": "Extra Mint", "price": 10 },
+          { "id": "addon3", "name": "Extra Spices", "price": 10 }
+        ]
+      }
+    },
+    "menuItem16": {
+      "restaurantId": "restaurantId3",
+      "name": "Chingri Bhorta",
+      "description": "Shrimp mashed with spices and mustard oil.",
+      "price": 750,
+      "image_url": "https://example.com/images/chingri_bhorta.jpg",
+      "dish_type": ["Bengali", "Seafood"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Mustard Oil", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem17": {
+      "restaurantId": "restaurantId3",
+      "name": "Shorshe Ilish",
+      "description": "Hilsha fish cooked in mustard sauce with rice.",
+      "price": 850,
+      "image_url": "https://example.com/images/shorshe_ilish.jpg",
+      "dish_type": ["Bengali", "Seafood"],
+      "customizable": true,
+      "options": {
+        "rice_type": [
+          { "id": "rice1", "name": "Plain Rice", "price": 0 },
+          { "id": "rice2", "name": "Polao", "price": 50 },
+          { "id": "rice3", "name": "Brown Rice", "price": 30 }
+        ],
+        "fish_size": [
+          { "id": "size1", "name": "Regular", "price": 0 },
+          { "id": "size2", "name": "Large", "price": 200 },
+          { "id": "size3", "name": "Extra Large", "price": 400 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Mustard Sauce", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem18": {
+      "restaurantId": "restaurantId3",
+      "name": "Macher Jhol",
+      "description": "Traditional fish curry with tomatoes and potatoes.",
+      "price": 700,
+      "image_url": "https://example.com/images/macher_jhol.jpg",
+      "dish_type": ["Bengali", "Seafood"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Gravy", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem19": {
+      "restaurantId": "restaurantId3",
+      "name": "Bhetki Fry",
+      "description": "Fried bhetki fish served with a tangy sauce.",
+      "price": 650,
+      "image_url": "https://example.com/images/bhetki_fry.jpg",
+      "dish_type": ["Bengali", "Seafood"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Sauce", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem20": {
+      "restaurantId": "restaurantId3",
+      "name": "Panta Bhat",
+      "description": "Fermented rice soaked in water, served with fried fish.",
+      "price": 350,
+      "image_url": "https://example.com/images/panta_bhat.jpg",
+      "dish_type": ["Bengali", "Rice"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 100 }
+        ],
+        "fish_type": [
+          { "id": "fish1", "name": "Fried Hilsha", "price": 0 },
+          { "id": "fish2", "name": "Fried Bhetki", "price": 50 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Fish", "price": 50 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem21": {
+      "restaurantId": "restaurantId4",
+      "name": "Tandoori Chicken",
+      "description": "Chicken marinated with spices and grilled in a tandoor.",
+      "price": 800,
+      "image_url": "https://example.com/images/tandoori_chicken.jpg",
+      "dish_type": ["Indian", "Tandoori"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Sauce", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem22": {
+      "restaurantId": "restaurantId4",
+      "name": "Paneer Tikka",
+      "description": "Cottage cheese marinated in spices and grilled.",
+      "price": 500,
+      "image_url": "https://example.com/images/paneer_tikka.jpg",
+      "dish_type": ["Indian", "Tandoori"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 100 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Sauce", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem23": {
+      "restaurantId": "restaurantId4",
+      "name": "Naan",
+      "description": "Soft Indian flatbread cooked in a tandoor.",
+      "price": 150,
+      "image_url": "https://example.com/images/naan.jpg",
+      "dish_type": ["Indian", "Bread"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 50 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Garlic", "price": 20 },
+          { "id": "addon2", "name": "Butter", "price": 30 },
+          { "id": "addon3", "name": "Cheese", "price": 40 }
+        ]
+      }
+    },
+    "menuItem24": {
+      "restaurantId": "restaurantId4",
+      "name": "Biryani",
+      "description": "Aromatic rice cooked with spices and your choice of meat.",
+      "price": 850,
+      "image_url": "https://example.com/images/biryani.jpg",
+      "dish_type": ["Indian", "Biryani"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 },
+          { "id": "portion3", "name": "Family Size", "price": 400 }
+        ],
+        "meat_quantity": [
+          { "id": "meat1", "name": "Regular", "price": 0 },
+          { "id": "meat2", "name": "Extra Meat", "price": 150 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Boiled Egg", "price": 20 },
+          { "id": "addon2", "name": "Raita", "price": 30 },
+          { "id": "addon3", "name": "Salad", "price": 25 }
+        ]
+      }
+    },
+    "menuItem25": {
+      "restaurantId": "restaurantId4",
+      "name": "Raita",
+      "description": "Yogurt with cucumber and spices.",
+      "price": 120,
+      "image_url": "https://example.com/images/raita.jpg",
+      "dish_type": ["Indian", "Side"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 50 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Cucumber", "price": 10 },
+          { "id": "addon2", "name": "Extra Mint", "price": 10 },
+          { "id": "addon3", "name": "Extra Spices", "price": 10 }
+        ]
+      }
+    },
+    "menuItem26": {
+      "restaurantId": "restaurantId5",
+      "name": "Mutton Korma",
+      "description": "Tender mutton cooked in creamy yogurt gravy.",
+      "price": 950,
+      "image_url": "https://example.com/images/mutton_korma.jpg",
+      "dish_type": ["Bengali", "Curry"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Gravy", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem27": {
+      "restaurantId": "restaurantId5",
+      "name": "Prawn Malai Curry",
+      "description": "Prawns cooked in a creamy coconut gravy.",
+      "price": 1200,
+      "image_url": "https://example.com/images/prawn_malai_curry.jpg",
+      "dish_type": ["Bengali", "Seafood"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Coconut Milk", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem28": {
+      "restaurantId": "restaurantId5",
+      "name": "Shorshe Ilish",
+      "description": "Hilsha fish in mustard sauce.",
+      "price": 1100,
+      "image_url": "https://example.com/images/shorshe_ilish.jpg",
+      "dish_type": ["Bengali", "Seafood"],
+      "customizable": true,
+      "options": {
+        "rice_type": [
+          { "id": "rice1", "name": "Plain Rice", "price": 0 },
+          { "id": "rice2", "name": "Polao", "price": 50 },
+          { "id": "rice3", "name": "Brown Rice", "price": 30 }
+        ],
+        "fish_size": [
+          { "id": "size1", "name": "Regular", "price": 0 },
+          { "id": "size2", "name": "Large", "price": 200 },
+          { "id": "size3", "name": "Extra Large", "price": 400 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Mustard Sauce", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem29": {
+      "restaurantId": "restaurantId5",
+      "name": "Khichuri",
+      "description": "Moong dal khichuri served with beef curry.",
+      "price": 450,
+      "image_url": "https://example.com/images/khichuri.jpg",
+      "dish_type": ["Bengali", "Khichuri"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 150 }
+        ],
+        "meat_type": [
+          { "id": "meat1", "name": "Beef", "price": 0 },
+          { "id": "meat2", "name": "Mutton", "price": 100 },
+          { "id": "meat3", "name": "Chicken", "price": 50 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Boiled Egg", "price": 20 },
+          { "id": "addon2", "name": "Begun Bhaja", "price": 30 },
+          { "id": "addon3", "name": "Extra Ghee", "price": 40 }
+        ]
+      }
+    },
+    "menuItem30": {
+      "restaurantId": "restaurantId5",
+      "name": "Beguni",
+      "description": "Crispy battered eggplant served with chutney.",
+      "price": 200,
+      "image_url": "https://example.com/images/beguni.jpg",
+      "dish_type": ["Bengali", "Vegetarian"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 50 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Chutney", "price": 20 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem31": {
+      "restaurantId": "restaurantId6",
+      "name": "Fuchka",
+      "description": "Crispy puris filled with spicy tamarind water and chickpeas.",
+      "price": 100,
+      "image_url": "https://example.com/images/fuchka.jpg",
+      "dish_type": ["Bengali", "Street Food"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 50 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Tamarind Water", "price": 10 },
+          { "id": "addon2", "name": "Extra Chickpeas", "price": 10 },
+          { "id": "addon3", "name": "Green Chilies", "price": 10 }
+        ]
+      }
+    },
+    "menuItem32": {
+      "restaurantId": "restaurantId6",
+      "name": "Chotpoti",
+      "description": "A tangy chickpea salad with tamarind and spices.",
+      "price": 120,
+      "image_url": "https://example.com/images/chotpoti.jpg",
+      "dish_type": ["Bengali", "Street Food"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 50 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Tamarind Sauce", "price": 10 },
+          { "id": "addon2", "name": "Extra Chickpeas", "price": 10 },
+          { "id": "addon3", "name": "Green Chilies", "price": 10 }
+        ]
+      }
+    },
+    "menuItem33": {
+      "restaurantId": "restaurantId6",
+      "name": "Samosa",
+      "description": "Crispy pastry filled with spiced potatoes and peas.",
+      "price": 60,
+      "image_url": "https://example.com/images/samosa.jpg",
+      "dish_type": ["Bengali", "Street Food"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 20 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Chutney", "price": 10 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 10 }
+        ]
+      }
+    },
+    "menuItem34": {
+      "restaurantId": "restaurantId6",
+      "name": "Egg Roll",
+      "description": "Paratha rolled with eggs, chicken, and vegetables.",
+      "price": 150,
+      "image_url": "https://example.com/images/egg_roll.jpg",
+      "dish_type": ["Bengali", "Street Food"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 50 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Chicken", "price": 30 },
+          { "id": "addon2", "name": "Extra Vegetables", "price": 20 },
+          { "id": "addon3", "name": "Green Chilies", "price": 10 }
+        ]
+      }
+    },
+    "menuItem35": {
+      "restaurantId": "restaurantId6",
+      "name": "Muri Ghonto",
+      "description": "Rice cooked with fish head and spices.",
+      "price": 200,
+      "image_url": "https://example.com/images/muri_ghonto.jpg",
+      "dish_type": ["Bengali", "Rice"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 50 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Fish", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem36": {
+      "restaurantId": "restaurantId7",
+      "name": "Grilled Chicken",
+      "description": "Chicken marinated in spices and grilled to perfection.",
+      "price": 900,
+      "image_url": "https://example.com/images/grilled_chicken.jpg",
+      "dish_type": ["International", "Grill"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Sauce", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem37": {
+      "restaurantId": "restaurantId7",
+      "name": "Beef Steak",
+      "description": "Tender beef steak grilled with herbs and spices.",
+      "price": 1200,
+      "image_url": "https://example.com/images/beef_steak.jpg",
+      "dish_type": ["International", "Grill"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Sauce", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem38": {
+      "restaurantId": "restaurantId7",
+      "name": "Grilled Salmon",
+      "description": "Fresh salmon grilled with lemon and garlic.",
+      "price": 1500,
+      "image_url": "https://example.com/images/grilled_salmon.jpg",
+      "dish_type": ["International", "Grill"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Lemon", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem39": {
+      "restaurantId": "restaurantId7",
+      "name": "Veg Grilled Platter",
+      "description": "Assorted grilled vegetables served with a tangy dip.",
+      "price": 650,
+      "image_url": "https://example.com/images/veg_grilled_platter.jpg",
+      "dish_type": ["International", "Grill"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 100 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Dip", "price": 20 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem40": {
+      "restaurantId": "restaurantId7",
+      "name": "Grilled Prawns",
+      "description": "Shrimps marinated in spices and grilled with lemon.",
+      "price": 1100,
+      "image_url": "https://example.com/images/grilled_prawns.jpg",
+      "dish_type": ["International", "Grill"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Lemon", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem41": {
+      "restaurantId": "restaurantId8",
+      "name": "Ilish Bhuna",
+      "description": "Hilsha fish cooked in spicy mustard gravy.",
+      "price": 900,
+      "image_url": "https://example.com/images/ilish_bhuna.jpg",
+      "dish_type": ["Bengali", "Seafood"],
+      "customizable": true,
+      "options": {
+        "rice_type": [
+          { "id": "rice1", "name": "Plain Rice", "price": 0 },
+          { "id": "rice2", "name": "Polao", "price": 50 },
+          { "id": "rice3", "name": "Brown Rice", "price": 30 }
+        ],
+        "fish_size": [
+          { "id": "size1", "name": "Regular", "price": 0 },
+          { "id": "size2", "name": "Large", "price": 200 },
+          { "id": "size3", "name": "Extra Large", "price": 400 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Mustard Sauce", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem42": {
+      "restaurantId": "restaurantId8",
+      "name": "Mutton Korma",
+      "description": "Mutton cooked in a rich, creamy gravy.",
+      "price": 1200,
+      "image_url": "https://example.com/images/mutton_korma.jpg",
+      "dish_type": ["Bengali", "Curry"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Gravy", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem43": {
+      "restaurantId": "restaurantId8",
+      "name": "Chicken Jalfrezi",
+      "description": "Spicy chicken curry with bell peppers and tomatoes.",
+      "price": 700,
+      "image_url": "https://example.com/images/chicken_jalfrezi.jpg",
+      "dish_type": ["Bengali", "Curry"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 200 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Gravy", "price": 30 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem44": {
+      "restaurantId": "restaurantId8",
+      "name": "Shorshe Bhorta",
+      "description": "Mashed potatoes with mustard sauce.",
+      "price": 180,
+      "image_url": "https://example.com/images/shorshe_bhorta.jpg",
+      "dish_type": ["Bengali", "Vegetarian"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 50 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Mustard Sauce", "price": 20 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem45": {
+      "restaurantId": "restaurantId8",
+      "name": "Raita",
+      "description": "Yogurt with cucumber and spices.",
+      "price": 100,
+      "image_url": "https://example.com/images/raita.jpg",
+      "dish_type": ["Indian", "Side"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 50 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Cucumber", "price": 10 },
+          { "id": "addon2", "name": "Extra Mint", "price": 10 },
+          { "id": "addon3", "name": "Extra Spices", "price": 10 }
+        ]
+      }
+    },
+    "menuItem46": {
+      "restaurantId": "restaurantId9",
+      "name": "Chicken Kebab",
+      "description": "Tender chicken pieces grilled on skewers.",
+      "price": 500,
+      "image_url": "https://example.com/images/chicken_kebab.jpg",
+      "dish_type": ["Indian", "Kebab"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 100 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Sauce", "price": 20 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem47": {
+      "restaurantId": "restaurantId9",
+      "name": "Beef Kebab",
+      "description": "Juicy beef grilled with spices and herbs.",
+      "price": 700,
+      "image_url": "https://example.com/images/beef_kebab.jpg",
+      "dish_type": ["Indian", "Kebab"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 100 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Sauce", "price": 20 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem48": {
+      "restaurantId": "restaurantId9",
+      "name": "Lamb Kebab",
+      "description": "Succulent lamb grilled with aromatic spices.",
+      "price": 850,
+      "image_url": "https://example.com/images/lamb_kebab.jpg",
+      "dish_type": ["Indian", "Kebab"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 100 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Sauce", "price": 20 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem49": {
+      "restaurantId": "restaurantId9",
+      "name": "Veg Kebab",
+      "description": "Grilled vegetables marinated in spices.",
+      "price": 400,
+      "image_url": "https://example.com/images/veg_kebab.jpg",
+      "dish_type": ["Indian", "Kebab"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 50 }
+        ],
+        "spice_level": [
+          { "id": "spice1", "name": "Mild", "price": 0 },
+          { "id": "spice2", "name": "Medium", "price": 0 },
+          { "id": "spice3", "name": "Spicy", "price": 0 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Extra Sauce", "price": 20 },
+          { "id": "addon2", "name": "Green Chilies", "price": 10 },
+          { "id": "addon3", "name": "Onion Rings", "price": 20 }
+        ]
+      }
+    },
+    "menuItem50": {
+      "restaurantId": "restaurantId9",
+      "name": "Tandoori Roti",
+      "description": "Soft Indian bread baked in a tandoor.",
+      "price": 80,
+      "image_url": "https://example.com/images/tandoori_roti.jpg",
+      "dish_type": ["Indian", "Bread"],
+      "customizable": true,
+      "options": {
+        "portion_size": [
+          { "id": "portion1", "name": "Regular", "price": 0 },
+          { "id": "portion2", "name": "Large", "price": 20 }
+        ],
+        "add_ons": [
+          { "id": "addon1", "name": "Garlic", "price": 10 },
+          { "id": "addon2", "name": "Butter", "price": 20 },
+          { "id": "addon3", "name": "Cheese", "price": 30 }
+        ]
+      }
+    }
+  }
+}
